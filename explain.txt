@@ -1,0 +1,5 @@
+methods 请求方式 0 => GET, 1 => POST, 2 => DELETE
+
+felid 字段类型 0=>Number 1=>String 2=>Boolean 3=>Array 4=>Object 5=>FormData 6=>JSON
+
+is_required 是否必填 0=>选填 1=>必填
