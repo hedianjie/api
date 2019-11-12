@@ -208,20 +208,6 @@
     }
     .form-group{
         width: 66.66666%;
-        min-height: 32px;
-        position: relative;
-        padding-left: 85px;
-        margin-bottom: 15px;
-    }
-    .form-group .label{
-        position: absolute;
-        top: 0;
-        left: 0;
-        line-height: 32px;
-        font-size: 14px;
-    }
-    .form-group .form-control{
-        line-height: 32px;
     }
 
     .tab-groups{

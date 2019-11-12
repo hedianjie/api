@@ -263,4 +263,21 @@
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 		letter-spacing: 1px;
     }
+
+	.form-group{
+        min-height: 32px;
+        position: relative;
+        padding-left: 85px;
+        margin-bottom: 15px;
+    }
+    .form-group .label{
+        position: absolute;
+        top: 0;
+        left: 0;
+        line-height: 32px;
+        font-size: 13px;
+    }
+    .form-group .form-control{
+        line-height: 32px;
+    }
 </style>

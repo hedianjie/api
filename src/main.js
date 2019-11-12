@@ -15,7 +15,9 @@ import {
     Option,
     Radio,
     RadioGroup,
-    Button
+    Button,
+    Modal,
+    Message
 } from 'iview';
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
@@ -26,8 +28,9 @@ Vue.component('RadioGroup', RadioGroup);
 Vue.component('ScrollBar', ScrollBar);
 Vue.component('Button', Button);
 Vue.component('HButton', HButton);
+Vue.component('Modal', Modal);
 Vue.prototype.request = axios;
-
+Vue.prototype.$Message = Message;
 // 在这里获取slidebar列表
 
 new Vue({

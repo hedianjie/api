@@ -4,7 +4,7 @@
         <div class="layout-slidebar">
             <div class="slidebar-toolbar">
                 <div class="auth-avatar"><img src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar" alt=""></div>
-                <HButton theme="white" :only="true" icon="md-add">新建项目</HButton>
+                <HButton @click="a" theme="white" :only="true" icon="md-add">新建项目</HButton>
             </div>
             <scroll-bar :styles="{height: '100%'}">
                 
@@ -20,11 +20,61 @@
             <router-view class="container"></router-view>
         </div>
         <!-- <div class="layout-footer"></div> -->
+
+        <Modal 
+            v-model="modal"
+            title="添加项目"
+        >
+            <div class="form-horizontal">
+                <div class="color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 请求会以url+端口号+api来请求</div>
+                <div class="m-t-5 m-b-15 color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 例如：http://127.0.0.1:8080/api/login</div>
+                <div class="form-group">
+                    <label for="" class="label">项目名称：</label>
+                    <div class="form-control">
+                        <Input placeholder="请输入项目名称" :maxlength="15"/>
+                    </div>
+                    <div class="m-t-5 color-sub f-s-xs v-a-m"><Icon type="md-information-circle" color="#9ea7b4"/> 最多输入15个字符</div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="label">url地址：</label>
+                    <div class="form-control">
+                        <Input placeholder="请输入url地址"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="label">端口号：</label>
+                    <div class="form-control">
+                        <Input :style="{width: '150px'}" placeholder="请输入端口号" :maxlength="5"/>
+                    </div>
+                </div>
+            </div>
+
+            <div slot="footer">
+                <Button type="primary" @click="ok" :loading="modal_loading">保存</Button>
+                <Button type="default" @click="modal=false">取消</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
     // import scrollBar from '@/components/scrollbar';
     export default {
+        data() {
+            return {
+                modal: false,
+                modal_loading: false,
+            }
+        },
+        methods: {
+            a(){
+                console.log(1);
+                this.modal = true;
+            },
+            ok() {
+                console.log(this.$Message)
+                this.modal_loading = true;
+            }
+        }
         // components: {scrollBar}
     }
 </script>

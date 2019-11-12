@@ -1,5 +1,5 @@
 <template>
-    <div ref="btn" class="h-button circle circle-hover" :class="theme + ' ' + (only ? 'only' : '')">
+    <div @click="emit" ref="btn" class="h-button circle circle-hover" :class="theme + ' ' + (only ? 'only' : '')">
         <div ref="btnInner" class="btn-inner">
             <Icon v-if="icon" size="18" :type="icon" class="btn-icon"/>
             <div class="btn-slot"><slot></slot></div>
@@ -50,6 +50,10 @@
         methods: {
             init() {
                 this.$refs.btn.style.setProperty('--btnWidth', this.$refs.btnInner.clientWidth + 'px');
+            },
+
+            emit() {
+                this.$emit('click');
             }
         },
         mounted() {
