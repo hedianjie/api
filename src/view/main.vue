@@ -4,7 +4,7 @@
         <div class="layout-slidebar">
             <div class="slidebar-toolbar">
                 <div class="auth-avatar"><img src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar" alt=""></div>
-                <HButton @click="a" theme="white" :only="true" icon="md-add">新建项目</HButton>
+                <HButton @click="modalShow" theme="white" :only="true" icon="md-add">新建项目</HButton>
             </div>
             <scroll-bar :styles="{height: '100%'}">
                 
@@ -22,7 +22,7 @@
         <!-- <div class="layout-footer"></div> -->
 
         <Modal 
-            v-model="modal"
+            v-model="modal_status"
             title="添加项目"
         >
             <div class="form-horizontal">
@@ -31,27 +31,27 @@
                 <div class="form-group">
                     <label for="" class="label">项目名称：</label>
                     <div class="form-control">
-                        <Input placeholder="请输入项目名称" :maxlength="15"/>
+                        <Input v-model="modal_data.project_name" placeholder="请输入项目名称" :maxlength="15"/>
                     </div>
                     <div class="m-t-5 color-sub f-s-xs v-a-m"><Icon type="md-information-circle" color="#9ea7b4"/> 最多输入15个字符</div>
                 </div>
                 <div class="form-group">
                     <label for="" class="label">url地址：</label>
                     <div class="form-control">
-                        <Input placeholder="请输入url地址"/>
+                        <Input v-model="modal_data.url" placeholder="请输入url地址"/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label for="" class="label">端口号：</label>
                     <div class="form-control">
-                        <Input :style="{width: '150px'}" placeholder="请输入端口号" :maxlength="5"/>
+                        <Input v-model="modal_data.port" :style="{width: '150px'}" placeholder="请输入端口号" :maxlength="5"/>
                     </div>
                 </div>
             </div>
 
             <div slot="footer">
-                <Button type="primary" @click="ok" :loading="modal_loading">保存</Button>
-                <Button type="default" @click="modal=false">取消</Button>
+                <Button type="primary" @click="modalSend" :loading="modal_loading">保存</Button>
+                <Button type="default" @click="modal_status=false">取消</Button>
             </div>
         </Modal>
     </div>
@@ -61,19 +61,52 @@
     export default {
         data() {
             return {
-                modal: false,
+                modal_status: false,
                 modal_loading: false,
+                modal_data: {
+                    id: '',
+                    project_name: '',
+                    port: '',
+                    url: '',
+                }
             }
         },
         methods: {
-            a(){
-                console.log(1);
-                this.modal = true;
+            modalShow(option={}) {
+                this.modal_data.id = option.id;
+                this.modal_data.project_name = option.project_name;
+                this.modal_data.port = option.port;
+                this.modal_data.url = option.url;
+                this.modal_status = true;
             },
-            ok() {
-                console.log(this.$Message)
-                this.modal_loading = true;
+            verificationForm() {
+                let status = true, msg;
+                if(!this.modal_data.project_name) {
+                    status = false;
+                    msg = '请填写有效的项目名称'
+                }
+                if(!this.modal_data.port) {
+                    status = false;
+                    msg = '请填写有效的端口号'
+                }
+                if(!this.modal_data.url) {
+                    status = false;
+                    msg = '请填写有效的地址'
+                }
+                if(!status) {
+                    this.$Message.error(msg); 
+                }
+                return status;
+
+            },
+            modalSend() {
+                if(this.verificationForm()) {
+                    this.$http.post('/api/add_project', this.modal_data).then((result) => {
+                        console.log(result);
+                    })
+                }
             }
+            
         }
         // components: {scrollBar}
     }

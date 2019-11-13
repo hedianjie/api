@@ -51,8 +51,7 @@ module.exports = {
         proxy: [
             {
                 context: ['/api'],
-                target: 'http://127.0.0.1:8001',
-                pathRewrite: {'^/api' : '/project_wms'}
+                target: 'http://127.0.0.1:7001',
             }
         ]
         // quiet: false, // necessary for FriendlyErrorsPlugin

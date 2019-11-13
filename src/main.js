@@ -29,7 +29,7 @@ Vue.component('ScrollBar', ScrollBar);
 Vue.component('Button', Button);
 Vue.component('HButton', HButton);
 Vue.component('Modal', Modal);
-Vue.prototype.request = axios;
+Vue.prototype.$http = axios;
 Vue.prototype.$Message = Message;
 // 在这里获取slidebar列表
 
