@@ -135,17 +135,27 @@
     </div>
 </template>
 <script>
-    // import scrollBar from '@/components/scrollBar.vue';
     import apiView from "@/view/Api/components/apiView.vue";
     
     export default {
+        computed: {
+            project_id() {
+                return this.$store.state.project_id;
+            }
+
+        },
         data() {
             return {}
         },
     
         components: {
-            // scrollBar,
             apiView
+        },
+        mounted() {
+        },
+        watch: {
+            project_id(val, oldVal) {
+            }
         }
     }
 </script>

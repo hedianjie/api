@@ -4,14 +4,26 @@
         <div class="layout-slidebar">
             <div class="slidebar-toolbar">
                 <div class="auth-avatar"><img src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar" alt=""></div>
-                <HButton @click="modalShow" theme="white" :only="true" icon="md-add">新建项目</HButton>
+                <HButton 
+                    @click="modalShow" 
+                    theme="white" 
+                    :only="true" 
+                    icon="md-add"
+                >新建项目</HButton>
             </div>
             <scroll-bar :styles="{height: '100%'}">
                 
-                <div class="slidebar-list">
-                    <span class="project-icon"><Icon type="ios-arrow-forward" size="16"/></span>
-                    <span class="project-text"> WMS物流仓储系统</span>
-                    <span class="project-operate"><Icon type="ios-trash" size="18"/></span>
+                <div 
+                    class="slidebar-list" 
+                    v-for="(item, index) in project_list" 
+                    :key="index" :class="project_id == item.id ? 'active' : ''"  
+                    @click="toAPI(item)"
+                >
+                    <div>
+                        <div class="project-text">{{item.project_name}}</div>
+                        <div class="color-sub f-s-12">{{item.project_url}}</div>
+                    </div>
+                    <div class="project-operate" @click.stop="modalShow(item)"><Icon type="ios-create" size="18"/></div>
                 </div>
              
             </scroll-bar>
@@ -28,87 +40,149 @@
             <div class="form-horizontal">
                 <div class="color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 请求会以url+端口号+api来请求</div>
                 <div class="m-t-5 m-b-15 color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 例如：http://127.0.0.1:8080/api/login</div>
-                <div class="form-group">
-                    <label for="" class="label">项目名称：</label>
-                    <div class="form-control">
+
+                <Form ref="project_modal" :model="modal_data" :rules="modal_data_rule" label-position="left" :label-width="85" >
+                    <FormItem label="项目名称：" prop="project_name">
                         <Input v-model="modal_data.project_name" placeholder="请输入项目名称" :maxlength="15"/>
-                    </div>
-                    <div class="m-t-5 color-sub f-s-xs v-a-m"><Icon type="md-information-circle" color="#9ea7b4"/> 最多输入15个字符</div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="label">url地址：</label>
-                    <div class="form-control">
-                        <Input v-model="modal_data.url" placeholder="请输入url地址"/>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="label">端口号：</label>
-                    <div class="form-control">
-                        <Input v-model="modal_data.port" :style="{width: '150px'}" placeholder="请输入端口号" :maxlength="5"/>
-                    </div>
-                </div>
+                    </FormItem>
+                    <FormItem label="url地址：" prop="project_url">
+                        <Input v-model="modal_data.project_url" placeholder="请输入url地址"/>
+                    </FormItem>
+                    <FormItem label="端口号：" prop="project_port">
+                        <Input v-model="modal_data.project_port" :style="{width: '150px'}" placeholder="请输入端口号" :maxlength="5"/>
+                    </FormItem>
+                </Form>
             </div>
 
             <div slot="footer">
-                <Button type="primary" @click="modalSend" :loading="modal_loading">保存</Button>
+                <Button v-if="modal_data.id" @click="modalDel(modal_data.id)" class="pull-left" type="error" :loading="modal_del_loading">删除</Button>
+                <Button type="primary" @click="modalSend" :loading="modal_submit_loading">保存</Button>
                 <Button type="default" @click="modal_status=false">取消</Button>
             </div>
         </Modal>
     </div>
 </template>
 <script>
-    // import scrollBar from '@/components/scrollbar';
     export default {
+        computed: {
+            project_id() {
+                return this.$store.state.project_id;
+            }
+        },
         data() {
             return {
-                modal_status: false,
-                modal_loading: false,
+                modal_status: false, // 模态框展示隐藏状态
+                modal_submit_loading: false,// 提交按钮loading
+                modal_del_loading: false, // 删除按钮loading
+                // 模态框数据
                 modal_data: {
                     id: '',
-                    project_name: '',
-                    port: '',
-                    url: '',
-                }
+                    project_name: '', // 项目名称
+                    project_port: '', // 端口号
+                    project_url: '',  // 项目地址
+                },
+                // 模态框匹配规则
+                modal_data_rule: {
+                    project_name: [
+                        {required: true, message: '请输入项目名称！', trigger: 'blur'},
+                        {max: 15, message: '项目名称最多输入15个字符', trigger: 'blur'}
+                    ],
+                    
+                    project_url: [
+                        {required: true, message: '请输入URL地址!', trigger: 'blur'},
+                        {type: 'url', message: '请输入有效的URL地址!'},
+                    ],
+
+                    project_port: [
+                        {required: true, message: '请输入端口号!'},
+                    ]
+
+                },
+                // 项目列表
+                project_list: []
             }
         },
         methods: {
+            /**
+             * 获取项目列表
+             */
+            initProjectList() {
+                this.$http.get('/api/getProjectList').then(result => {
+                    this.project_list = result.data;
+                })
+            },
+            /**
+             * 展开modal
+             */
             modalShow(option={}) {
+                // 清空表单
+                this.$refs['project_modal'].resetFields();
                 this.modal_data.id = option.id;
                 this.modal_data.project_name = option.project_name;
-                this.modal_data.port = option.port;
-                this.modal_data.url = option.url;
+                this.modal_data.project_url = option.project_url;
+                this.modal_data.project_port = option.project_port;
                 this.modal_status = true;
             },
-            verificationForm() {
-                let status = true, msg;
-                if(!this.modal_data.project_name) {
-                    status = false;
-                    msg = '请填写有效的项目名称'
-                }
-                if(!this.modal_data.port) {
-                    status = false;
-                    msg = '请填写有效的端口号'
-                }
-                if(!this.modal_data.url) {
-                    status = false;
-                    msg = '请填写有效的地址'
-                }
-                if(!status) {
-                    this.$Message.error(msg); 
-                }
-                return status;
-
-            },
+            /**
+             * 验证modal并且提交
+             */
             modalSend() {
-                if(this.verificationForm()) {
-                    this.$http.post('/api/add_project', this.modal_data).then((result) => {
-                        console.log(result);
-                    })
+                this.$refs['project_modal'].validate().then(valid => {
+                    // 验证成功
+                    if(valid) {
+                        // 开启提交按钮loading
+                        this.modal_submit_loading = true;
+                        this.$http.post('/api/addProject', this.modal_data)
+                        .then((result) => {
+                            // 提示成功、关闭modal、刷新项目列表、关闭提交按钮loading
+                            this.$Message.success(result.msg);
+                            this.modal_status = false;
+                            this.initProjectList();
+                            this.modal_submit_loading = false;
+                        })
+                    }
+                    else {
+                        this.$Message.error('操作失败！');
+                    }
+                })
+            },
+            /**
+             * 删除项目
+             */
+            modalDel(id) {
+                const _this = this;
+                this.$Modal.confirm({
+                    title: '系统提示',
+                    content: '是否确认删除当前项目',
+                    onOk() {
+                        // 开启删除按钮loading
+                        _this.modal_del_loading = true;
+                        // axios delete传参?拼接
+                        _this.$http.delete('/api/delProject?id=' + id).then(result =>{
+                            // 提示成功、关闭modal、刷新项目列表、关闭删除按钮loading
+                            _this.$Message.success(result.msg);
+                            _this.modal_status = false;
+                            _this.initProjectList();
+                            _this.modal_del_loading = false;
+                        })
+                    }
+                })
+            },
+            /**
+             * 切换项目
+             */
+            toAPI(item) {
+                // 如果单签页不是ApiIndex 跳转到ApiIndex页
+                if(this.$route.path !== '/api/index') {
+                    this.$router.push({name: 'ApiIndex'});
                 }
+                this.$store.state.project_id = item.id;
             }
-            
+        },
+
+        beforeMount() {
+            this.initProjectList();
         }
-        // components: {scrollBar}
     }
 </script>
 <style scoped>
@@ -119,7 +193,7 @@
     height: 50px;
     width: 100%;
     border-bottom: 1px solid #eee;
-    background: red;
+    background: #fff;
     /* z-index: 1; */
 }
 .layout-main{
@@ -145,7 +219,7 @@
     left: 0;
     width: 250px;
     height: 100%;
-    padding-top: 50px;
+    padding-top: 60px;
     border-right: 1px solid #39435c;
     z-index: 1;
     background: #39435c;
@@ -184,19 +258,46 @@
     word-break: break-all;
     overflow: hidden;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    padding-left: 15px;
+    background: #39435c;
+    transition: background .15s ease-in-out;
+    cursor: pointer;
 }
- .slidebar-list .project-icon{
+.slidebar-list.active{
+    background: #485475;
+}
+
+.slidebar-list::before{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    background: #3399ff;
+    height: 100%;
+    opacity: 0;
+    transition: opacity .15s ease-in-out;
+}
+.slidebar-list.active::before{
+    opacity: 1;
+}
+ /* .slidebar-list .project-icon{
     margin-right: 5px;
     display: inline-block;
-}
+} */
  .slidebar-list .project-operate{
-    position: absolute;
-    right: 13px;
-    width: 24px;
+    /* position: absolute; */
+    /* right: 13px; */
+    /* width: 24px;
     height: 24px;
     top: 11px;
     text-align: center;
-    line-height: 24px;
+    line-height: 24px; */
+    padding:1px 3px;
     /* color: #ed4014; */
     border: 1px solid transparent;
     transition: all .2s linear;
@@ -204,7 +305,7 @@
 }
  .slidebar-list .project-operate:hover{
     color:#ddd ;
-    background: #ed4014;
+    background: #3399ff;
     border: 1px solid #ddd;
 }
 
