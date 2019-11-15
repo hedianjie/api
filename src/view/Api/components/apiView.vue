@@ -120,7 +120,7 @@ h2{
 .api-content {
     margin: 0 10px;
     padding: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 20px;
     color: #657180;
     background: #fff;
     border: 1px solid #e3e8ee;
@@ -178,7 +178,7 @@ h2{
 
 .api-content-parameter-table td {
     min-height: 48px;
-    padding: 8px 16px;
+    padding: 4px 16px;
     text-align: center;
     border-right: 1px solid #e3e8ee;
     border-bottom: 1px solid #e3e8ee;
@@ -229,6 +229,6 @@ a.api-btn-default:active {
 .api-content-explain,
 .api-content-methods,
 .api-content-flex {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 </style>

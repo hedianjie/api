@@ -281,3 +281,10 @@
         line-height: 32px;
     }
 </style>
+
+<style>
+	/** iview **/
+	/* .ivu-form-item{
+		margin-bottom: 15px;
+	} */
+</style>

@@ -16,7 +16,7 @@
                 <div 
                     class="slidebar-list" 
                     v-for="(item, index) in project_list" 
-                    :key="index" :class="project_id == item.id ? 'active' : ''"  
+                    :key="index" :class="project.id == item.id ? 'active' : ''"  
                     @click="toAPI(item)"
                 >
                     <div>
@@ -65,9 +65,9 @@
 <script>
     export default {
         computed: {
-            project_id() {
-                return this.$store.state.project_id;
-            }
+            project() {
+                return this.$store.state.project;
+            },
         },
         data() {
             return {
@@ -172,11 +172,16 @@
              * 切换项目
              */
             toAPI(item) {
+                // 先给store的item赋值 防止在路由拦截器拦截
+                // Vue.set(this.$store.state, 'project', item)
+                this.$store.state.project = item;
+                // 设置当前浏览项目cookie
+                this.$cookie.set('x-cookie-project', JSON.stringify(item));
                 // 如果单签页不是ApiIndex 跳转到ApiIndex页
                 if(this.$route.path !== '/api/index') {
                     this.$router.push({name: 'ApiIndex'});
                 }
-                this.$store.state.project_id = item.id;
+                
             }
         },
 

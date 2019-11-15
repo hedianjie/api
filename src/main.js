@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import VueCookie from 'vue-cookie';
 import App from '@/App';
 import router from '@/router/index.js';
 import store from '@/store/index';
@@ -34,6 +35,31 @@ Vue.component('Modal', Modal);
 Vue.component('Form', Form);
 Vue.component('FormItem', FormItem);
 
+/**
+ * 路由拦截
+ */
+
+router.beforeEach((to, from, next) => {
+  // 跳转ApiIndex/ApiEdit拦截没有项目id
+  if( to.name && (to.name === 'ApiIndex' || to.name === 'ApiEdit' )) {
+    if(!store.state.project || !store.state.project.id) {
+      // 如果cookie中有project相关信息
+      const projectInfo = VueCookie.get('x-cookie-project');
+      if(projectInfo) {
+        store.state.project = JSON.parse(projectInfo)
+        // Vue.set(store.state, 'project', JSON.parse(projectInfo))
+      }
+      else {
+        // 如果没有 则跳转到首页 并且提示
+        Message.warning('进入页面失败，定向到首页');
+        router.push({name: 'HomeIndex'});
+        return;
+      }
+    }
+  }
+  next();
+   // to and from are both route objects. must call `next`.
+ });
 
 /**
  * 请求拦截
@@ -59,7 +85,7 @@ axios.interceptors.request.use(
     // 接收响应成功
     result => {
         if(result.data.state !== 0) {
-            Promise.reject(result.data.msg) && Vue.prototype.$Message.error(`请求错误：${result.msg}`);
+            Promise.reject(result.data.msg) && Message.error(`请求错误：${result.msg}`);
         }
         else {
             return result.data;
@@ -67,7 +93,7 @@ axios.interceptors.request.use(
     },
   
     // 接收响应失败
-    err => Promise.reject(err) && Vue.prototype.$Message.error(`请求失败：${err}`)
+    err => Promise.reject(err) && Message.error(`请求失败：${err}`)
   
   )
 
@@ -78,7 +104,7 @@ Message.config({
 Vue.prototype.$http = axios;
 Vue.prototype.$Message = Message;
 Vue.prototype.$Modal = Modal;
-
+Vue.prototype.$cookie = VueCookie;
 
 new Vue({
     el: '#app',

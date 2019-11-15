@@ -5,28 +5,21 @@
                 <!-- 内容导航 -->
                 <div class="view-header">
                     <h4 class="view-title color-primary">
-                        <a href="javascript: history.back(-1)" title="添加API"><Icon class="m-r-5" type="ios-arrow-back" size="16"/>{{project_name}} - 添加API</a>
+                        <a href="javascript: history.back(-1)" title="添加API"><Icon class="m-r-5" type="ios-arrow-back" size="16"/>{{project.project_name}} - 添加API</a>
                     </h4>
                 </div>
                 <!-- 主体 -->
                 <div class="view-body">
                     <!-- 基础API配置 -->
-                    <div class="form-group">
-                        <label for="" class="label">API：</label>
-                        <div class="form-control">
-                            <Input placeholder="请输入API地址" v-model="api_url"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="label">API描述：</label>
-                        <div class="form-control">
-                            <Input placeholder="请输入API描述" v-model="api_desc"/>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="label">请求方式：</label>
-                        <div class="form-control">
-                            <RadioGroup v-model="api_methods">
+                    <Form ref="form_base" :model="form_data" :label-width="85" :rules="form_rules">
+                        <FormItem label="API：" prop="api_url">
+                            <Input placeholder="请输入API地址" v-model="form_data.api_url"/>
+                        </FormItem>
+                        <FormItem label="API描述：" prop="api_desc">
+                            <Input placeholder="请输入API描述" v-model="form_data.api_desc"/>
+                        </FormItem>
+                        <FormItem label="请求方式：" prop="api_methods">
+                            <RadioGroup v-model="form_data.api_methods">
                                 <Radio label="0">
                                     <span>GET</span>
                                 </Radio>
@@ -37,92 +30,109 @@
                                     <span>DELTET</span>
                                 </Radio>
                             </RadioGroup>
+                        </FormItem>
+
+                        <!-- API参数配置 -->
+                        <div class="tab-groups">
+                            <div @click="base_tab = 0" :class="base_tab === 0 ? 'active' : ''" class="tab-groups-list">request</div>
+                            <div @click="base_tab = 1" :class="base_tab === 1 ? 'active' : ''" class="tab-groups-list">response</div>
+                            <div class="clear-both"></div>
                         </div>
-                    </div>
+                        <div class="tab-container">
+                            <div class="tab-container-list" v-show="base_tab === 0">
+                                <!-- 请求示例 -->
+                                <FormItem label="请求示例：" prop="request.sample">
+                                    <Input v-model="form_data.request.sample" type="textarea" :autosize="{ minRows: 6}" placeholder="请输入或粘贴请求示 例如：{data: [], msg: '', state: 0}"/>
+                                </FormItem>
+                                <!-- 请求字段列表 -->
 
-                    <!-- API参数配置 -->
-                    <div class="tab-groups">
-                        <div @click="base_tab = 0" :class="base_tab === 0 ? 'active' : ''" class="tab-groups-list">request</div>
-                        <div @click="base_tab = 1" :class="base_tab === 1 ? 'active' : ''" class="tab-groups-list">response</div>
-                        <div class="clear-both"></div>
-                    </div>
-                    <div class="tab-container">
-                        <div class="tab-container-list" v-show="base_tab === 0">
-                            <!-- 请求示例 -->
-                            <div class="form-group">
-                                <label for="" class="label">请求示例：</label>
-                                <div class="form-control">
-                                    <Input v-model="request.sample" type="textarea" :autosize="{ minRows: 6}" placeholder="请输入或粘贴请求示 例如：{data: [], msg: '', state: 0}"/>
-                                </div>
-                            </div>
-                            <!-- 请求字段列表 -->
+                                <div v-for="(item, index) in form_data.request.filed" :key="index" class="group-layout">
+                                    <div class="group-title">request-字段-{{index + 1}}</div>
+                                    <div class="group-actions">
+                                        <a herf="javascript:void(0);" title="删除字段">
+                                            <Icon type="ios-trash" size="20"/>
+                                        </a>
+                                    </div>
 
-                            <div v-for="(item, index) in request.filed" :key="index" class="group-layout">
-                                <div class="group-title">request-字段-{{index + 1}}</div>
-                                <div class="group-actions">
-                                    <a herf="javascript:void(0);" title="删除字段">
-                                        <Icon type="ios-trash" size="20"/>
-                                    </a>
-                                </div>
-
-                                <div class="group-container">
-                                    <div class="form-group">
-                                        <label class="label">字段名称：</label>
-                                        <div class="form-control">
+                                    <div class="group-container">
+                                        <FormItem label="字段名称：" :prop="`request.filed.${index}.name`" :rules="form_rules.name">
                                             <Input v-model="item.name" placeholder="请输入字段名称"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label">字段类型：</label>
-                                        <div class="form-control">
-                                            <Select v-model="item.type" filterable>
-                                                <Option v-for="item in base_type_list" :key="item.key" :value="item.key">{{item.value}}</Option>
+                                        </FormItem>
+                                        <FormItem label="字段类型：" :prop="`request.filed.${index}.type`" :rules="form_rules.type">
+                                           <Select v-model="item.type" filterable>
+                                                <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                             </Select>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="label">是否必填：</label>
-                                        <div class="form-control">
+                                        </FormItem>
+                                        <FormItem label="是否必填：" :prop="`request.filed.${index}.is_required`" :rules="form_rules.is_required">
                                             <RadioGroup v-model="item.is_required">
                                                 <Radio label="0"><span class="color-disabled">选填</span></Radio>
                                                 <Radio label="1"><span class="color-error">必填</span></Radio>
                                             </RadioGroup>
-                                        </div>
-                                    </div>
-
-                                     <div class="form-group">
-                                        <label class="label">默认值：</label>
-                                        <div class="form-control">
+                                        </FormItem>
+                                        <FormItem label="默认值：" :prop="`request.filed.${index}.def`" :rules="form_rules.def">
                                             <Input v-model="item.def" placeholder="请输入默认值"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label for="" class="label">字段描述：</label>
-                                        <div class="form-control">
+                                        </FormItem>
+                                        <FormItem label="字段描述：" :prop="`request.filed.${index}.desc`" :rules="form_rules.desc">
                                             <Input v-model="item.desc" type="textarea" :autosize="{ minRows: 3}" placeholder="请输入字段描述"/>
-                                        </div>
+                                        </FormItem>
                                     </div>
                                 </div>
+                                <Button type="success" long @click="addRequestFiled()">继续添加字段</Button>
                             </div>
-                            <Button type="success" long>继续添加字段</Button>
-                        </div>
-                        <div class="tab-container-list" v-show="base_tab === 1">
-                        </div>
-                    </div>
+                            <div class="tab-container-list" v-show="base_tab === 1">
+                                <!-- 响应示例 -->
+                                <FormItem label="响应示例：" prop="response.sample">
+                                    <Input v-model="form_data.response.sample" type="textarea" :autosize="{ minRows: 6}" placeholder="请输入或粘贴响应示 例如：{data: [], msg: '', state: 0}"/>
+                                </FormItem>
+                                <!-- 响应字段列表 -->
 
-                    
+                                <div v-for="(item, index) in form_data.response.filed" :key="index" class="group-layout">
+                                    <div class="group-title">response-字段-{{index + 1}}</div>
+                                    <div class="group-actions">
+                                        <a herf="javascript:void(0);" title="删除字段">
+                                            <Icon type="ios-trash" size="20"/>
+                                        </a>
+                                    </div>
+
+                                    <div class="group-container">
+                                        <FormItem label="字段名称：" :prop="`response.filed.${index}.name`" :rules="form_rules.name">
+                                            <Input v-model="item.name" placeholder="请输入字段名称"/>
+                                        </FormItem>
+                                        <FormItem label="字段类型：" :prop="`response.filed.${index}.type`" :rules="form_rules.type">
+                                           <Select v-model="item.type" filterable>
+                                                <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
+                                            </Select>
+                                        </FormItem>
+                                        <FormItem label="是否必填：" :prop="`response.filed.${index}.is_required`" :rules="form_rules.is_required">
+                                            <RadioGroup v-model="item.is_required">
+                                                <Radio label="0"><span class="color-disabled">选填</span></Radio>
+                                                <Radio label="1"><span class="color-error">必填</span></Radio>
+                                            </RadioGroup>
+                                        </FormItem>
+                                        <FormItem label="默认值：" :prop="`response.filed.${index}.def`" :rules="form_rules.def">
+                                            <Input v-model="item.def" placeholder="请输入默认值"/>
+                                        </FormItem>
+                                        <FormItem label="字段描述：" :prop="`response.filed.${index}.desc`" :rules="form_rules.desc">
+                                            <Input v-model="item.desc" type="textarea" :autosize="{ minRows: 3}" placeholder="请输入字段描述"/>
+                                        </FormItem>
+                                    </div>
+                                </div>
+                                <Button type="success" long @click="addResponseFiled()">继续添加字段</Button>
+                            </div>
+                        </div>
+                    </Form>
                 </div>
             </div>
         </scroll-bar>
     </div>
 </template>
 <script>
-    // import scrollBar from '@/components/scrollBar.vue'
-
     export default {
+        computed: {
+            project() {
+                return this.$store.state.project;
+            }
+        },
         data() {
             return {
                 // 数据类型列表
@@ -172,34 +182,89 @@
 
                 base_tab: 0, // request / response 切换 0=>request 1=>response
 
-                project_name: '物流仓储系统', // 项目名称
-                api_url: '/api/login', // 接口地址
-                api_desc: '这是一个登陆接口', // 接口描述
-                api_methods: '0', // 请求方式
-                request: { // 请求
-                    sample: '{}', // 请求示例
-                    filed: [
-                        {
-                            name: 'username', // 字段名称
-                            type: '1', // 字段类型
-                            is_required: '0', // 是否必填
-                            def: '', // 默认值
-                            desc: '', // 字段描述
-                        },
+                form_data: {
+                    api_url: '/api/login', // 接口地址
+                    api_desc: '这是一个登陆接口', // 接口描述
+                    api_methods: '0', // 请求方式
+                    request: { // 请求
+                        sample: '{}', // 请求示例
+                        filed: [
+                            // {
+                            //     name: 'username', // 字段名称
+                            //     type: '1', // 字段类型
+                            //     is_required: '0', // 是否必填
+                            //     def: '', // 默认值
+                            //     desc: '', // 字段描述
+                            // },
 
-                        {
-                            name: 'username', // 字段名称
-                            type: '1', // 字段类型
-                            is_required: '0', // 是否必填
-                            def: '', // 默认值
-                            desc: '', // 字段描述
-                        }
-                    ]
+                            // {
+                            //     name: 'username', // 字段名称
+                            //     type: '1', // 字段类型
+                            //     is_required: '0', // 是否必填
+                            //     def: '', // 默认值
+                            //     desc: '', // 字段描述
+                            // }
+                        ]
+                    },
+                    response: { // 请求
+                        sample: '{}', // 请求示例
+                        filed: [
+                            // {
+                            //     name: 'username', // 字段名称
+                            //     type: '1', // 字段类型
+                            //     is_required: '0', // 是否必填
+                            //     def: '', // 默认值
+                            //     desc: '', // 字段描述
+                            // },
+
+                            // {
+                            //     name: 'username', // 字段名称
+                            //     type: '1', // 字段类型
+                            //     is_required: '0', // 是否必填
+                            //     def: '', // 默认值
+                            //     desc: '', // 字段描述
+                            // }
+                        ]
+                    },
+                },
+
+                form_rules: {
+                    api_url: [{type: 'string', required: true, message: '请输入API地址！', trigger: 'blur'}],
+                    api_desc: {required: true, message: '请输入API描述！', trigger: 'blur'},
+                    api_methods: {required: true, message: '请选择一种请求方式！', trigger: 'change'},
+                    'request.sample': {required: true, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
+                    'response.sample': {required: true, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
+
+                    name: {required: true, message: '请填写字段名称！', trigger: 'blur'},
+                    type: {required: true, message: '请选择一种数据格式！', trigger: 'change'},
+                    is_required: {required: true, message: '请选择是否必填！', trigger: 'change'},
+                    def: {required: true, message: '请填写默认值！', trigger: 'blur'},
+                    desc: {required: true, message: '请填写字段描述！', trigger: 'blur'},
                 }
 
             }
         },
-        // components: {scrollBar}
+
+        methods: {
+            addRequestFiled(name, type, def) {
+                this.form_data.request.filed.push({
+                    name: name || '', // 字段名称
+                    type: type || '', // 字段类型
+                    is_required: '0', // 是否必填
+                    def: def || '', // 默认值
+                    desc: '', // 字段描述
+                })
+            },
+            addResponseFiled(name, type, def) {
+                this.form_data.response.filed.push({
+                    name: name || '', // 字段名称
+                    type: type || '', // 字段类型
+                    is_required: '0', // 是否必填
+                    def: def || '', // 默认值
+                    desc: '', // 字段描述
+                })
+            }
+        }
     }
 </script>
 <style scoped>

@@ -4,123 +4,17 @@
             
             <div class="api-slidebar-toolbar">
                 <a class="slidebar-fix"><Icon type="md-menu" size="24"/></a>
-                <HButton theme="white" :only="true" icon="md-add">新建接口</HButton>
+                <HButton @click="toEdit" theme="white" :only="true" icon="md-add">新建接口</HButton>
             </div>
 
             <scroll-bar :style="{height: '100%'}">
-    
                 <div class="api-list active">
-    
                     <div class="api-list-status"></div>
-    
                     <div class="api-list-content">
-    
                         <div class="api-list-url">/api/login</div>
-    
                         <div class="api-list-explain">登录获取权限</div>
-    
                     </div>
-    
                 </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
-                <div class="api-list">
-    
-                    <div class="api-list-status"></div>
-    
-                    <div class="api-list-content">
-    
-                        <div class="api-list-url">/api/login</div>
-    
-                        <div class="api-list-explain">登录获取权限</div>
-    
-                    </div>
-    
-                </div>
-    
             </scroll-bar>
     
         </div>
@@ -139,8 +33,8 @@
     
     export default {
         computed: {
-            project_id() {
-                return this.$store.state.project_id;
+            project() {
+                return this.$store.state.project;
             }
 
         },
@@ -151,10 +45,16 @@
         components: {
             apiView
         },
+        methods: {
+            toEdit() {
+                this.$router.push({name: 'ApiEdit'})
+            }
+        },
         mounted() {
         },
         watch: {
-            project_id(val, oldVal) {
+            project(val, oldVal) {
+                
             }
         }
     }
