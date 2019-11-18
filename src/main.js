@@ -3,6 +3,7 @@ import VueCookie from 'vue-cookie';
 import App from '@/App';
 import router from '@/router/index.js';
 import store from '@/store/index';
+import Utils from '@/utils/index.js';
 import axios from 'axios';
 
 import 'iview/dist/styles/iview.css';
@@ -105,6 +106,7 @@ Vue.prototype.$http = axios;
 Vue.prototype.$Message = Message;
 Vue.prototype.$Modal = Modal;
 Vue.prototype.$cookie = VueCookie;
+Vue.prototype.$utils = Utils;
 
 new Vue({
     el: '#app',

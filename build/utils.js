@@ -5,10 +5,9 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 module.exports = {
 
 
-    assetsLoader(env) {
+    assetsLoader(env=false) { // false -> 开发环境 true -> 正式环境
 
         let sourceMap = true;
-        env = env || false; // false -> 开发环境 true -> 正式环境
 
         const cssBase = {
             loader: 'css-loader',

@@ -214,7 +214,7 @@ export default {
 
         // 监听容器里面内容增加或者减少(仅限增加减少)
         const observer = new MutationObserver((mutationList)=>{
-            if(_this.$refs.viewContent.clientHeight != _this.scrollHeight || _this.viewHeight != _this.$refs.scrollbarWarpper.clientHeight) {
+            if(_this.$refs.viewContent && (_this.$refs.viewContent.clientHeight != _this.scrollHeight || _this.viewHeight != _this.$refs.scrollbarWarpper.clientHeight)) {
                 _this.init();
             }
             
@@ -228,7 +228,7 @@ export default {
         });
 
         window.addEventListener('resize', () => {
-            if(_this.$refs.viewContent.clientHeight != _this.scrollHeight || _this.viewHeight != _this.$refs.scrollbarWarpper.clientHeight) {
+            if(_this.$refs.viewContent && (_this.$refs.viewContent.clientHeight != _this.scrollHeight || _this.viewHeight != _this.$refs.scrollbarWarpper.clientHeight)) {
                 _this.init.call(_this);
             }
         })

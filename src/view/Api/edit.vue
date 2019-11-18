@@ -11,7 +11,7 @@
                 <!-- 主体 -->
                 <div class="view-body">
                     <!-- 基础API配置 -->
-                    <Form ref="form_base" :model="form_data" :label-width="85" :rules="form_rules">
+                    <Form ref="form_base" :model="form_data" :label-width="85" :rules="form_rules" :style="{width: '66.6666666666%'}">
                         <FormItem label="API：" prop="api_url">
                             <Input placeholder="请输入API地址" v-model="form_data.api_url"/>
                         </FormItem>
@@ -30,6 +30,36 @@
                                     <span>DELTET</span>
                                 </Radio>
                             </RadioGroup>
+                        </FormItem>
+                        <FormItem label="headers：">
+                            <table class="h-headers-table" cellspacing="0" cellpadding="0">
+                                <thead>
+                                    <tr>
+                                        <th colspan="4">添加请求头</th>
+                                    </tr>
+                                    <tr>
+                                        <th width="200">key</th>
+                                        <th width="240">value</th>
+                                        <th>描述</th>
+                                        <th width="30"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                    <tr v-for="(item, index) in headers" :key="index">
+                                        <td><Input :ref="`headers_parameter_key_${index}`" v-model="item.key" size="small" placeholder="key"/></td>
+                                        <td><Input :ref="`headers_parameter_value_${index}`" v-model="item.value" size="small" placeholder="value"/></td>
+                                        <td><Input :ref="`headers_parameter_desc_${index}`" v-model="item.desc" size="small" placeholder="描述"/></td>
+                                        <td><Icon @click="headersParameterDel(index)" class="table-icon icon-close" type="ios-close-circle" size="20"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><Input v-model="headers_push_data.key" size="small" placeholder="key"/></td>
+                                        <td><Input v-model="headers_push_data.value" size="small" placeholder="value"/></td>
+                                        <td><Input v-model="headers_push_data.desc" size="small" placeholder="描述"/></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </FormItem>
 
                         <!-- API参数配置 -->
@@ -59,7 +89,7 @@
                                             <Input v-model="item.name" placeholder="请输入字段名称"/>
                                         </FormItem>
                                         <FormItem label="字段类型：" :prop="`request.filed.${index}.type`" :rules="form_rules.type">
-                                           <Select v-model="item.type" filterable>
+                                           <Select @input="relTypeDef(item)" v-model="item.type" filterable>
                                                 <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                             </Select>
                                         </FormItem>
@@ -99,7 +129,7 @@
                                             <Input v-model="item.name" placeholder="请输入字段名称"/>
                                         </FormItem>
                                         <FormItem label="字段类型：" :prop="`response.filed.${index}.type`" :rules="form_rules.type">
-                                           <Select v-model="item.type" filterable>
+                                           <Select @change="relTypeDef(item)" v-model="item.type" filterable>
                                                 <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                             </Select>
                                         </FormItem>
@@ -135,7 +165,7 @@
         },
         data() {
             return {
-                // 数据类型列表
+                // 数据类型列表 
                 base_type_list: {
                     0: {
                         key: '0',
@@ -179,15 +209,15 @@
                         def: ""
                     }
                 },
-
-                base_tab: 0, // request / response 切换 0=>request 1=>response
-
+                // request / response 切换 0=>request 1=>response
+                base_tab: 0, 
+                // 表单数据
                 form_data: {
                     api_url: '/api/login', // 接口地址
                     api_desc: '这是一个登陆接口', // 接口描述
                     api_methods: '0', // 请求方式
                     request: { // 请求
-                        sample: '{}', // 请求示例
+                        sample: '', // 请求示例
                         filed: [
                             // {
                             //     name: 'username', // 字段名称
@@ -227,7 +257,7 @@
                         ]
                     },
                 },
-
+                // 验证表单提交规则
                 form_rules: {
                     api_url: [{type: 'string', required: true, message: '请输入API地址！', trigger: 'blur'}],
                     api_desc: {required: true, message: '请输入API描述！', trigger: 'blur'},
@@ -240,6 +270,20 @@
                     is_required: {required: true, message: '请选择是否必填！', trigger: 'change'},
                     def: {required: true, message: '请填写默认值！', trigger: 'blur'},
                     desc: {required: true, message: '请填写字段描述！', trigger: 'blur'},
+                },
+                // 设置请求头
+                headers: [
+                    {
+                        key: 'Authorization',
+                        value: '123',
+                        desc: 'xxxxxxxx'
+                    },
+
+                ],
+                headers_push_data: {
+                    key: 123,
+                    value: '',
+                    desc: ''
                 }
 
             }
@@ -253,7 +297,7 @@
                     is_required: '0', // 是否必填
                     def: def || '', // 默认值
                     desc: '', // 字段描述
-                })
+                });
             },
             addResponseFiled(name, type, def) {
                 this.form_data.response.filed.push({
@@ -263,6 +307,86 @@
                     def: def || '', // 默认值
                     desc: '', // 字段描述
                 })
+            },
+            /**
+             * 删除请求头
+             */
+            headersParameterDel(index) {
+                this.headers.splice(index, 1);
+            },
+
+            relTypeDef(item) {
+                switch (item.type) {
+                    case '0': {
+                        item.def = '0';
+                        break;
+                    }
+                    case '1': {
+                        item.def = '""';
+                        break;
+                    }
+                    case '2': {
+                        item.def = 'false';
+                        break;
+                    }
+                    case '3': {
+                        item.def = '[]';
+                        break;
+                    }
+                    case '4': {
+                        item.def = '{}';
+                        break;
+                    }
+                    case '5': {
+                        item.def = 'null';
+                        break;
+                    }
+                    case '6': {
+                        item.def = '""';
+                        break;
+                    }
+                }
+            },
+            
+            /*
+             * 分解获取示例
+             */
+            resolveSample(str) {
+                const data = eval(str);
+            },
+
+        },
+
+        watch: {
+            'headers_push_data.key'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.headers_push_data);
+                    this.headers.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.headers_push_data.key = '';
+                        this.$refs[`headers_parameter_key_${this.headers.length-1}`][0].focus();
+                    });
+                }
+            },
+            'headers_push_data.value'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.headers_push_data);
+                    this.headers.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.headers_push_data.value = '';
+                        this.$refs[`headers_parameter_value_${this.headers.length-1}`][0].focus();
+                    });
+                }
+            },
+            'headers_push_data.desc'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.headers_push_data);
+                    this.headers.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.headers_push_data.desc = '';
+                        this.$refs[`headers_parameter_desc_${this.headers.length-1}`][0].focus();
+                    });
+                }
             }
         }
     }
@@ -339,6 +463,33 @@
         padding: 10px;
         padding-top: 20px;
         padding-bottom: 0;
+    }
+
+    .h-headers-table{
+        border-left: 1px solid #e3e8ee;
+        border-top: 1px solid #e3e8ee;
+        width: 100%;
+    }
+    .h-headers-table thead tr:first-child{
+        background: #f5f7f9;
+    }
+    .h-headers-table td,
+    .h-headers-table th{
+        border-right: 1px solid #e3e8ee;
+        border-bottom: 1px solid #e3e8ee;
+        padding: 4px 4px;
+        text-align: center;
+    }
+    .h-headers-table .table-icon{
+        color: #999;
+        cursor: pointer;
+        transition: color .15s ease-in-out;
+    }
+    .h-headers-table .table-icon:hover{
+        color: #333;
+    }
+    .h-headers-table tbody tr:hover td{
+        background: rgb(241, 241, 241);
     }
 </style>
 <style>
