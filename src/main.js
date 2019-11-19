@@ -62,41 +62,45 @@ router.beforeEach((to, from, next) => {
    // to and from are both route objects. must call `next`.
  });
 
+
 /**
  * 请求拦截
  */
 axios.interceptors.request.use(
 
-    // 发送请求成功
-    config => {
-      console.log(config);
-      return config;
-    },
-  
-    // 发送请求失败
-    err => Promise.reject(err)
-  
-  )
-  
-  /**
-   * 响应拦截
-   */
-  axios.interceptors.response.use(
-  
-    // 接收响应成功
-    result => {
-        if(result.data.state !== 0) {
-            Promise.reject(result.data.msg) && Message.error(`请求错误：${result.msg}`);
-        }
-        else {
-            return result.data;
-        }
-    },
-  
-    // 接收响应失败
-    err => Promise.reject(err) && Message.error(`请求失败：${err}`)
-  
-  )
+  // 发送请求成功
+  config => {
+    console.log(config);
+    return config;
+  },
+
+  // 发送请求失败
+  err => Promise.reject(err)
+
+)
+
+/**
+ * 响应拦截
+ */
+axios.interceptors.response.use(
+
+  // 接收响应成功
+  result => {
+      if(result.data.state !== 0) {
+          Promise.reject(result.data.msg) && Message.error(`请求错误：${result.msg}`);
+      }
+      else {
+          return result.data;
+      }
+  },
+
+  // 接收响应失败
+  err => Promise.reject(err) && Message.error(`请求失败：${err}`)
+
+)
+
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 
 Message.config({
     duration: 2

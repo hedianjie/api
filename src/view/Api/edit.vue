@@ -19,7 +19,7 @@
                             <Input placeholder="请输入API描述" v-model="form_data.api_desc"/>
                         </FormItem>
                         <FormItem label="请求方式：" prop="api_methods">
-                            <RadioGroup v-model="form_data.api_methods">
+                            <RadioGroup v-model="form_data.api_methods" @input="defMethodsRequestType">
                                 <Radio label="0">
                                     <span>GET</span>
                                 </Radio>
@@ -70,44 +70,101 @@
                         </div>
                         <div class="tab-container">
                             <div class="tab-container-list" v-show="base_tab === 0">
-                                <!-- 请求示例 -->
-                                <FormItem label="请求示例：" prop="request.sample">
+                                <!-- 请求方式 -->
+                                <FormItem>
+                                    <RadioGroup v-model="form_data.request.request_type">
+                                        <Radio v-if="form_data.api_methods === '1'" label="0"><span>none</span></Radio>
+                                        <Radio v-if="form_data.api_methods === '1'" label="1"><span>form-data</span></Radio>
+                                        <Radio v-if="form_data.api_methods === '1'" label="2"><span>x-www-form-urlencoded</span></Radio><!-- POST 默认 -->
+                                        <Radio v-if="form_data.api_methods !== '1'" label="3"><span>params</span></Radio><!-- GET DELETE 默认 -->
+                                    </RadioGroup>
+                                </FormItem>
+                                <!-- 请求示例(x-www-form-urlencoded / params) -->
+                                <FormItem v-if="form_data.request.request_type === '2' || form_data.request.request_type === '3'" label="请求示例：" prop="request.sample">
+                                    <Button @click="resolveSample" shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
+                                    <Button shape="circle" size="small" class="sample-btn btn-second">测试请求</Button>
                                     <Input v-model="form_data.request.sample" type="textarea" :autosize="{ minRows: 6}" placeholder="请输入或粘贴请求示 例如：{data: [], msg: '', state: 0}"/>
                                 </FormItem>
+                                <!-- 请求示例(form-data) -->
+                                <FormItem v-else-if="form_data.request.request_type === '1'" label="请求示例：" prop="request.sample" :style="{'min-height': '76px'}">
+                                    <Button shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
+                                    <Button shape="circle" size="small" class="sample-btn btn-second">测试请求</Button>
+                                    <table class="h-headers-table" cellspacing="0" cellpadding="0">
+                                        <thead>
+                                            <tr>
+                                                <th width="240">key</th>
+                                                <th width="240">value</th>
+                                                <th>描述</th>
+                                                <th width="30"></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                            <tr v-for="(item, index) in form_data.request.form_data_sample" :key="index">
+                                                <td style="display: flex">
+                                                    <Input :style="{width: '66.6666664%'}" :ref="`form_data_sample_key_${index}`" v-model="item.key" size="small" placeholder="key" />
+                                                    <Select size="small" :style="{width: '33.3333333%', 'margin-left': '4px'}" :ref="`form_data_sample_type_${index}`" v-model="item.type" filterable>
+                                                        <Option value="0">Text</Option>
+                                                        <Option value="1">File</Option>
+                                                    </Select>
+                                                </td>
+                                                <td>
+                                                    <Input v-if="item.type === '0'" :ref="`form_data_sample_value_${index}`" v-model="item.value" size="small" placeholder="value"/>
+                                                    <input v-else-if="item.type === '1'" @change="formDataFileChange(item, index)" :ref="`form_data_sample_file_${index}`" type="file" style="height: 24px;"/>
+                                                </td>
+                                                <td><Input :ref="`form_data_sample_desc_${index}`" v-model="item.desc" size="small" placeholder="描述"/></td>
+                                                <td><Icon @click="formDataDel(index)" class="table-icon icon-close" type="ios-close-circle" size="20"/></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="display: flex">
+                                                    <Input :style="{width: '66.6666664%'}" v-model="form_data_push_data.key" size="small" placeholder="key" />
+                                                    <Select size="small" :style="{width: '33.3333333%','margin-left': '4px'}" v-model="form_data_push_data.type" filterable>
+                                                        <Option value="0">Text</Option>
+                                                        <Option value="1">File</Option>
+                                                    </Select>
+                                                </td>
+                                                <td><Input v-model="form_data_push_data.value" size="small" placeholder="value"/></td>
+                                                <td><Input v-model="form_data_push_data.desc" size="small" placeholder="描述"/></td>
+                                                <td></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </FormItem>
                                 <!-- 请求字段列表 -->
+                                <template v-if="form_data.request_type !== '0'">
+                                   <div v-for="(item, index) in form_data.request.filed" :key="index" class="group-layout">
+                                        <div class="group-title">request-字段-{{index + 1}}</div>
+                                        <div class="group-actions">
+                                            <a herf="javascript:void(0);" title="删除字段">
+                                                <Icon type="ios-trash" size="20"/>
+                                            </a>
+                                        </div>
 
-                                <div v-for="(item, index) in form_data.request.filed" :key="index" class="group-layout">
-                                    <div class="group-title">request-字段-{{index + 1}}</div>
-                                    <div class="group-actions">
-                                        <a herf="javascript:void(0);" title="删除字段">
-                                            <Icon type="ios-trash" size="20"/>
-                                        </a>
+                                        <div class="group-container">
+                                            <FormItem label="字段名称：" :prop="`request.filed.${index}.name`" :rules="form_rules.name">
+                                                <Input v-model="item.name" placeholder="请输入字段名称"/>
+                                            </FormItem>
+                                            <FormItem label="字段类型：" :prop="`request.filed.${index}.type`" :rules="form_rules.type">
+                                                <Select v-model="item.type" filterable>
+                                                    <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
+                                                </Select>
+                                            </FormItem>
+                                            <FormItem label="是否必填：" :prop="`request.filed.${index}.is_required`" :rules="form_rules.is_required">
+                                                <RadioGroup v-model="item.is_required">
+                                                    <Radio label="0"><span class="color-disabled">选填</span></Radio>
+                                                    <Radio label="1"><span class="color-error">必填</span></Radio>
+                                                </RadioGroup>
+                                            </FormItem>
+                                            <FormItem label="默认值：" :prop="`request.filed.${index}.def`" :rules="form_rules.def">
+                                                <Input v-model="item.def" placeholder="请输入默认值"/>
+                                            </FormItem>
+                                            <FormItem label="字段描述：" :prop="`request.filed.${index}.desc`" :rules="form_rules.desc">
+                                                <Input v-model="item.desc" type="textarea" :autosize="{ minRows: 3}" placeholder="请输入字段描述"/>
+                                            </FormItem>
+                                        </div>
                                     </div>
-
-                                    <div class="group-container">
-                                        <FormItem label="字段名称：" :prop="`request.filed.${index}.name`" :rules="form_rules.name">
-                                            <Input v-model="item.name" placeholder="请输入字段名称"/>
-                                        </FormItem>
-                                        <FormItem label="字段类型：" :prop="`request.filed.${index}.type`" :rules="form_rules.type">
-                                           <Select @input="relTypeDef(item)" v-model="item.type" filterable>
-                                                <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
-                                            </Select>
-                                        </FormItem>
-                                        <FormItem label="是否必填：" :prop="`request.filed.${index}.is_required`" :rules="form_rules.is_required">
-                                            <RadioGroup v-model="item.is_required">
-                                                <Radio label="0"><span class="color-disabled">选填</span></Radio>
-                                                <Radio label="1"><span class="color-error">必填</span></Radio>
-                                            </RadioGroup>
-                                        </FormItem>
-                                        <FormItem label="默认值：" :prop="`request.filed.${index}.def`" :rules="form_rules.def">
-                                            <Input v-model="item.def" placeholder="请输入默认值"/>
-                                        </FormItem>
-                                        <FormItem label="字段描述：" :prop="`request.filed.${index}.desc`" :rules="form_rules.desc">
-                                            <Input v-model="item.desc" type="textarea" :autosize="{ minRows: 3}" placeholder="请输入字段描述"/>
-                                        </FormItem>
-                                    </div>
-                                </div>
-                                <Button type="success" long @click="addRequestFiled()">继续添加字段</Button>
+                                </template>
+                                <Button v-if="form_data.request.request_type !== '0'" type="success" long @click="addRequestFiled()">点击添加字段</Button>
                             </div>
                             <div class="tab-container-list" v-show="base_tab === 1">
                                 <!-- 响应示例 -->
@@ -129,7 +186,7 @@
                                             <Input v-model="item.name" placeholder="请输入字段名称"/>
                                         </FormItem>
                                         <FormItem label="字段类型：" :prop="`response.filed.${index}.type`" :rules="form_rules.type">
-                                           <Select @change="relTypeDef(item)" v-model="item.type" filterable>
+                                           <Select v-model="item.type" filterable>
                                                 <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                             </Select>
                                         </FormItem>
@@ -154,6 +211,26 @@
                 </div>
             </div>
         </scroll-bar>
+
+        <Modal
+            v-model="sampleModal.status"
+            title="解析结果"
+        >
+            <table class="h-headers-table">
+                <thead>
+                    <tr>
+                        <td>字段名称</td>
+                        <td>字段类型</td>
+                        <td>默认值</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <td>name</td>
+                    <td><span class="color-primary">Number</span></td>
+                    <td><span class="color-sub">null</span></td>
+                </tbody>
+            </table>
+        </Modal>
     </div>
 </template>
 <script>
@@ -164,6 +241,14 @@
             }
         },
         data() {
+            /**
+             * ************************ api_methods(请求方式)变更 ***************************
+             * 当form_data.api_methods(请求方式)为GET或者DELETE时，请求示例默认Content-Type为params(key: 3)，并且只有params这一个Content-Type可选，
+             * 当form_data.api_methods(请求方式)为POST时，请求示例默认Content-type为x-www-form-urlencoded(key: 2)，有none(无参数)、form-data(有file的表单提交)、x-www-form-urlencoded(无file的表单提交)可选，
+             * 
+             * ************************ request_type(Content-type)变更 ***************************
+             * 当当form_data.request.request_type(Content-type)为0(none)时，清空filed(参数)、无添加参数按钮
+             */
             return {
                 // 数据类型列表 
                 base_type_list: {
@@ -215,9 +300,11 @@
                 form_data: {
                     api_url: '/api/login', // 接口地址
                     api_desc: '这是一个登陆接口', // 接口描述
-                    api_methods: '0', // 请求方式
+                    api_methods: '1', // 请求方式(默认post)
                     request: { // 请求
                         sample: '', // 请求示例
+                        form_data_sample: [], // 表单提交请求示例
+                        request_type: '2', // 请求方式（默认x-www-form-urlencoded）Content-Type
                         filed: [
                             // {
                             //     name: 'username', // 字段名称
@@ -262,8 +349,8 @@
                     api_url: [{type: 'string', required: true, message: '请输入API地址！', trigger: 'blur'}],
                     api_desc: {required: true, message: '请输入API描述！', trigger: 'blur'},
                     api_methods: {required: true, message: '请选择一种请求方式！', trigger: 'change'},
-                    'request.sample': {required: true, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
-                    'response.sample': {required: true, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
+                    'request.sample': {required: false, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
+                    'response.sample': {required: false, message: '请添加或粘贴一段请求示例！', trigger: 'blur'},
 
                     name: {required: true, message: '请填写字段名称！', trigger: 'blur'},
                     type: {required: true, message: '请选择一种数据格式！', trigger: 'change'},
@@ -272,20 +359,38 @@
                     desc: {required: true, message: '请填写字段描述！', trigger: 'blur'},
                 },
                 // 设置请求头
-                headers: [
-                    {
-                        key: 'Authorization',
-                        value: '123',
-                        desc: 'xxxxxxxx'
-                    },
+                headers: [],
 
-                ],
+                // 解析请求示例modal数据
+                sampleModal: {
+                    status: false,
+                    data: []
+                },
+
+
+
+
+
+
+
+
+
+                // 请求头默认添加信息
                 headers_push_data: {
-                    key: 123,
+                    key: '',
                     value: '',
                     desc: ''
-                }
+                },
 
+                // 设置表单提交请求示例
+                form_data_push_data: {
+                    key: '',
+                    desc: '',
+                    type: '0', // 0->text 1->file
+                    value: '',
+                    file: ''
+
+                }
             }
         },
 
@@ -314,50 +419,86 @@
             headersParameterDel(index) {
                 this.headers.splice(index, 1);
             },
+            /**
+             * 删除form-data数据
+             */
+            formDataDel(index) {
+                this.form_data.request.form_data_sample.splice(index, 1);
+            },
+            /**
+             * form-data中file变化时赋值
+             * ** item.中存的是files集合（数组）
+             */
+            formDataFileChange(item, index) {
+                item.file = this.$refs[`form_data_sample_file_${index}`][0].files;
+            },
 
-            relTypeDef(item) {
-                switch (item.type) {
-                    case '0': {
-                        item.def = '0';
+            /**
+             * 返回数据类型的默认值
+             */
+            dataTyleDefault(type) {
+                switch (type) {
+                    case '0': return '0'
+                    case '1': return '""'
+                    case '2': return 'false'
+                    case '3': return '[]'
+                    case '4': return '{}'
+                    case '5': return 'null'
+                    case '6': return '""'
+                }
+            },
+            
+            /**
+             * 请求方式变更 切换请求示例中的请求类型（Content-Type）
+             */
+            defMethodsRequestType(val) {
+                switch(val) {
+                    case '0':
+                    case '2': {
+                        // 如果请求方式为GET、DELETE 设置默认请求类型为params
+                        if(this.form_data.request.request_type !== '3')
+                            this.form_data.request.request_type = '3';
                         break;
                     }
                     case '1': {
-                        item.def = '""';
-                        break;
-                    }
-                    case '2': {
-                        item.def = 'false';
-                        break;
-                    }
-                    case '3': {
-                        item.def = '[]';
-                        break;
-                    }
-                    case '4': {
-                        item.def = '{}';
-                        break;
-                    }
-                    case '5': {
-                        item.def = 'null';
-                        break;
-                    }
-                    case '6': {
-                        item.def = '""';
+                        // 如果请求方式为POST 设置默认请求类型为x-www-form-urlencoded
+                        if(this.form_data.request.request_type !== '2')
+                            this.form_data.request.request_type = '2';
                         break;
                     }
                 }
             },
             
             /*
-             * 分解获取示例
+             * 分解获取示例(x-www-form-urlencoded）Content)
              */
-            resolveSample(str) {
-                const data = eval(str);
+            resolveSample() {
+                let data;
+                try{
+                    data = eval(this.form_data.request.sample);
+                }
+                catch(e) {
+                    this.$Message.error('解析错误：可能不是一个对象，请输入正确的请求示例');
+                    return;
+                }
+
+                this.sampleModal.status = true;
             },
+
+            /**
+             * 分解获取form-data数据
+             */
+            resolveFormDataSample() {
+
+            }
+
 
         },
 
         watch: {
+            /**
+             * 请求头 
+             */
             'headers_push_data.key'(val, oldVal) {
                 if(val) {
                     const copy_obj = this.$utils.deepCopy(this.headers_push_data);
@@ -385,6 +526,50 @@
                     this.$nextTick(() => {
                         this.headers_push_data.desc = '';
                         this.$refs[`headers_parameter_desc_${this.headers.length-1}`][0].focus();
+                    });
+                }
+            },
+            /**
+             * 表单form-data
+             */
+            'form_data_push_data.key'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
+                    this.form_data.request.form_data_sample.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.form_data_push_data.key = '';
+                        this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
+                    });
+                }
+            },
+            'form_data_push_data.value'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
+                    this.form_data.request.form_data_sample.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.form_data_push_data.value = '';
+                        this.$refs[`form_data_sample_value_${this.form_data.request.form_data_sample.length-1}`][0].focus();
+                    });
+                }
+            },
+            'form_data_push_data.desc'(val, oldVal) {
+                if(val) {
+                    const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
+                    this.form_data.request.form_data_sample.push(copy_obj);
+                    this.$nextTick(() => {
+                        this.form_data_push_data.desc = '';
+                        this.$refs[`form_data_sample_desc_${this.form_data.request.form_data_sample.length-1}`][0].focus();
+                    });
+                }
+            },
+            'form_data_push_data.type'(val, oldVal) {
+                if(val!='0') {
+                    const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
+                    this.form_data.request.form_data_sample.push(copy_obj);
+                    this.$nextTick(() => {
+                        // 重置默认值 并且让key选中 this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
+                        this.form_data_push_data.type = '0';
+                        this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
                     });
                 }
             }
@@ -490,6 +675,16 @@
     }
     .h-headers-table tbody tr:hover td{
         background: rgb(241, 241, 241);
+    }
+    .sample-btn{
+        position: absolute;
+        left: -76px;
+    }
+    .sample-btn.btn-first{
+        top: 32px;
+    }
+    .sample-btn.btn-second{
+        top: 66px;
     }
 </style>
 <style>
