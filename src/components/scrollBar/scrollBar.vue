@@ -231,7 +231,7 @@ export default {
             if(_this.$refs.viewContent && (_this.$refs.viewContent.clientHeight != _this.scrollHeight || _this.viewHeight != _this.$refs.scrollbarWarpper.clientHeight)) {
                 _this.init.call(_this);
             }
-        })
+        });
         
     },
 

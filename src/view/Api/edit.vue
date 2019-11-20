@@ -38,7 +38,7 @@
                                         <th colspan="4">添加请求头</th>
                                     </tr>
                                     <tr>
-                                        <th width="200">key</th>
+                                        <th width="240">key</th>
                                         <th width="240">value</th>
                                         <th>描述</th>
                                         <th width="30"></th>
@@ -73,7 +73,7 @@
                                 <!-- 请求方式 -->
                                 <FormItem>
                                     <RadioGroup v-model="form_data.request.request_type">
-                                        <Radio v-if="form_data.api_methods === '1'" label="0"><span>none</span></Radio>
+                                        <Radio label="0"><span>none</span></Radio>
                                         <Radio v-if="form_data.api_methods === '1'" label="1"><span>form-data</span></Radio>
                                         <Radio v-if="form_data.api_methods === '1'" label="2"><span>x-www-form-urlencoded</span></Radio><!-- POST 默认 -->
                                         <Radio v-if="form_data.api_methods !== '1'" label="3"><span>params</span></Radio><!-- GET DELETE 默认 -->
@@ -81,20 +81,20 @@
                                 </FormItem>
                                 <!-- 请求示例(x-www-form-urlencoded / params) -->
                                 <FormItem v-if="form_data.request.request_type === '2' || form_data.request.request_type === '3'" label="请求示例：" prop="request.sample">
-                                    <Button @click="resolveSample" shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
+                                    <Button @click="resolveSample(0)" shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
                                     <Button shape="circle" size="small" class="sample-btn btn-second">测试请求</Button>
-                                    <Input v-model="form_data.request.sample" type="textarea" :autosize="{ minRows: 6}" placeholder="请输入或粘贴请求示 例如：{data: [], msg: '', state: 0}"/>
+                                    <textarea style="min-height:136px;" class="ivu-input" @mousewheel.stop v-model="form_data.request.sample" placeholder="请输入或粘贴请求示 例如：{data: [], msg: '', state: 0}" rows="6" ></textarea>
                                 </FormItem>
                                 <!-- 请求示例(form-data) -->
                                 <FormItem v-else-if="form_data.request.request_type === '1'" label="请求示例：" prop="request.sample" :style="{'min-height': '76px'}">
-                                    <Button shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
+                                    <Button @click="resolveFormDataSample(0)" shape="circle" size="small" class="sample-btn btn-first">解析示例</Button>
                                     <Button shape="circle" size="small" class="sample-btn btn-second">测试请求</Button>
                                     <table class="h-headers-table" cellspacing="0" cellpadding="0">
                                         <thead>
                                             <tr>
-                                                <th width="240">key</th>
-                                                <th width="240">value</th>
-                                                <th>描述</th>
+                                                <th>key</th>
+                                                <th>value</th>
+                                                <!-- <th>描述</th> -->
                                                 <th width="30"></th>
                                             </tr>
                                         </thead>
@@ -102,29 +102,29 @@
                                             
                                             <tr v-for="(item, index) in form_data.request.form_data_sample" :key="index">
                                                 <td style="display: flex">
-                                                    <Input :style="{width: '66.6666664%'}" :ref="`form_data_sample_key_${index}`" v-model="item.key" size="small" placeholder="key" />
-                                                    <Select size="small" :style="{width: '33.3333333%', 'margin-left': '4px'}" :ref="`form_data_sample_type_${index}`" v-model="item.type" filterable>
-                                                        <Option value="0">Text</Option>
-                                                        <Option value="1">File</Option>
+                                                    <Input :ref="`form_data_sample_key_${index}`" v-model="item.key" size="small" placeholder="key" />
+                                                    <Select size="small" :style="{'margin-left': '4px'}" :ref="`form_data_sample_type_${index}`" v-model="item.type" filterable>
+                                                        <Option value="string">Text</Option>
+                                                        <Option value="file">File</Option>
                                                     </Select>
                                                 </td>
                                                 <td>
-                                                    <Input v-if="item.type === '0'" :ref="`form_data_sample_value_${index}`" v-model="item.value" size="small" placeholder="value"/>
-                                                    <input v-else-if="item.type === '1'" @change="formDataFileChange(item, index)" :ref="`form_data_sample_file_${index}`" type="file" style="height: 24px;"/>
+                                                    <Input v-if="item.type === 'string'" :ref="`form_data_sample_value_${index}`" v-model="item.value" size="small" placeholder="value"/>
+                                                    <input v-else-if="item.type === 'file'" @change="formDataFileChange(item, index)" :ref="`form_data_sample_file_${index}`" type="file" style="height: 24px;"/>
                                                 </td>
-                                                <td><Input :ref="`form_data_sample_desc_${index}`" v-model="item.desc" size="small" placeholder="描述"/></td>
+                                                <!-- <td><Input :ref="`form_data_sample_desc_${index}`" v-model="item.desc" size="small" placeholder="描述"/></td> -->
                                                 <td><Icon @click="formDataDel(index)" class="table-icon icon-close" type="ios-close-circle" size="20"/></td>
                                             </tr>
                                             <tr>
                                                 <td style="display: flex">
-                                                    <Input :style="{width: '66.6666664%'}" v-model="form_data_push_data.key" size="small" placeholder="key" />
-                                                    <Select size="small" :style="{width: '33.3333333%','margin-left': '4px'}" v-model="form_data_push_data.type" filterable>
-                                                        <Option value="0">Text</Option>
-                                                        <Option value="1">File</Option>
+                                                    <Input v-model="form_data_push_data.key" size="small" placeholder="key" />
+                                                    <Select size="small" :style="{'margin-left': '4px'}" v-model="form_data_push_data.type" filterable>
+                                                        <Option value="string">Text</Option>
+                                                        <Option value="file">File</Option>
                                                     </Select>
                                                 </td>
                                                 <td><Input v-model="form_data_push_data.value" size="small" placeholder="value"/></td>
-                                                <td><Input v-model="form_data_push_data.desc" size="small" placeholder="描述"/></td>
+                                                <!-- <td><Input v-model="form_data_push_data.desc" size="small" placeholder="描述"/></td> -->
                                                 <td></td>
                                             </tr>
                                         </tbody>
@@ -133,9 +133,9 @@
                                 <!-- 请求字段列表 -->
                                 <template v-if="form_data.request_type !== '0'">
                                    <div v-for="(item, index) in form_data.request.filed" :key="index" class="group-layout">
-                                        <div class="group-title">request-字段-{{index + 1}}</div>
+                                        <div class="group-title" v-html="`request-字段-<b >${item.name}</b>`"></div>
                                         <div class="group-actions">
-                                            <a herf="javascript:void(0);" title="删除字段">
+                                            <a @click="delRequestFiled(index)" herf="javascript:void(0);" title="删除字段">
                                                 <Icon type="ios-trash" size="20"/>
                                             </a>
                                         </div>
@@ -146,6 +146,7 @@
                                             </FormItem>
                                             <FormItem label="字段类型：" :prop="`request.filed.${index}.type`" :rules="form_rules.type">
                                                 <Select v-model="item.type" filterable>
+                                                    <Option value="">- 请选择 -</Option>
                                                     <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                                 </Select>
                                             </FormItem>
@@ -174,7 +175,7 @@
                                 <!-- 响应字段列表 -->
 
                                 <div v-for="(item, index) in form_data.response.filed" :key="index" class="group-layout">
-                                    <div class="group-title">response-字段-{{index + 1}}</div>
+                                    <div class="group-title" v-html="`response-字段-<b >${item.name}</b>`"></div>
                                     <div class="group-actions">
                                         <a herf="javascript:void(0);" title="删除字段">
                                             <Icon type="ios-trash" size="20"/>
@@ -187,6 +188,7 @@
                                         </FormItem>
                                         <FormItem label="字段类型：" :prop="`response.filed.${index}.type`" :rules="form_rules.type">
                                            <Select v-model="item.type" filterable>
+                                                <Option value="">- 请选择 -</Option>
                                                 <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
                                             </Select>
                                         </FormItem>
@@ -215,6 +217,7 @@
         <Modal
             v-model="sampleModal.status"
             title="解析结果"
+            @on-ok="sampleModalSubmit"
         >
             <table class="h-headers-table">
                 <thead>
@@ -225,9 +228,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <td>name</td>
-                    <td><span class="color-primary">Number</span></td>
-                    <td><span class="color-sub">null</span></td>
+                    <tr v-for="(item, index) in sampleModal.data" :key="index">
+                        <td>{{item.name}}</td>
+                        <td><span class="color-primary">{{item.type_name}}</span></td>
+                        <td><span class="color-sub">{{item.def}}</span></td>
+                    </tr>
                 </tbody>
             </table>
         </Modal>
@@ -252,47 +257,41 @@
             return {
                 // 数据类型列表 
                 base_type_list: {
-                    0: {
+                    'number': {
                         key: '0',
                         value: 'Number',
                         def: '0'
                     },
 
-                    1: {
+                    'string': {
                         key: '1',
                         value: 'String',
-                        def: ''
+                        def: '""'
                     },
 
-                    2: {
+                    'boolean': {
                         key: '2',
                         value: 'Boolean',
                         def: 'false'
                     },
 
-                    3: {
+                    'array': {
                         key: '3',
                         value: 'Array',
                         def: '[]',
                     },
 
-                    4: {
+                    'object': {
                         key: '4',
                         value: 'Object',
                         def: '{}'
                     },
 
-                    5: {
+                    'file': {
                         key: '5',
-                        value: 'FormData',
-                        def: ''
+                        value: 'File',
+                        def: 'null'
                     },
-
-                    6: {
-                        key: '6',
-                        value: 'JSON',
-                        def: ""
-                    }
                 },
                 // request / response 切换 0=>request 1=>response
                 base_tab: 0, 
@@ -364,7 +363,8 @@
                 // 解析请求示例modal数据
                 sampleModal: {
                     status: false,
-                    data: []
+                    data: [],
+                    type: null, // 0->request 1->response
                 },
 
 
@@ -385,11 +385,9 @@
                 // 设置表单提交请求示例
                 form_data_push_data: {
                     key: '',
-                    desc: '',
-                    type: '0', // 0->text 1->file
+                    type: 'string', // string->text file->file
                     value: '',
                     file: ''
-
                 }
             }
         },
@@ -411,6 +409,17 @@
                     is_required: '0', // 是否必填
                     def: def || '', // 默认值
                     desc: '', // 字段描述
+                })
+            },
+            delRequestFiled(index) {
+                const _this = this;
+                this.$Modal.confirm({
+                    title: '系统提示',
+                    content: '是否确认删除当前编辑的字段？',
+                    onOk() {
+                        _this.form_data.request.filed.splice(index, 1);
+                        _this.$Message.warning('重新保存后生效，请记得保存！')
+                    }
                 })
             },
             /**
@@ -445,8 +454,12 @@
                     case '4': return '{}'
                     case '5': return 'null'
                     case '6': return '""'
+                    default: return ''
                 }
             },
+            /**
+             * 
+             */
             
             /**
              * 请求方式变更 切换请求示例中的请求类型（Content-Type）
@@ -472,24 +485,101 @@
             /*
              * 分解获取示例(x-www-form-urlencoded）Content)
              */
-            resolveSample() {
-                let data;
+            resolveSample(type) { // 0>request 1>response
+                let data, ary=[];
                 try{
                     data = eval(this.form_data.request.sample);
                 }
                 catch(e) {
-                    this.$Message.error('解析错误：可能不是一个对象，请输入正确的请求示例');
-                    return;
+                    try{
+                        data = new Function(`return ${this.form_data.request.sample}`)();
+                    }
+                    catch(e) {
+                        this.$Message.error('解析错误：可能不是一个对象，请输入正确的请求示例');
+                        return;
+
+                    }
                 }
 
+                /**
+                 * 递归查找字段
+                 */
+                const parse = (d, name) => {
+                    const dRes = this.$utils.testData(d);
+                    for(let k in d) {
+                        // 验证数据结果
+                        const res = this.$utils.testData(d[k]);
+                        let dName;
+                        if(dRes === 'object') {
+                            dName = name ? `${name}.${k}` : k;
+                        }
+                        else if(dRes === 'array'){
+                            dName = name ? `${name}[${k}]` : k;
+                        }
+
+                        // 如果是对象或者数组 继续向下查找字段
+                        if(res === 'object' || res === 'array') {
+                            parse(d[k], dName);
+                        }
+                        else {
+                            ary.push({
+                                name: dName, // 字段名称
+                                type_name: this.base_type_list[res] ? this.base_type_list[res].value : '', // 字段类型
+                                type: this.base_type_list[res] ? this.base_type_list[res].key : '',
+                                is_required: '0', // 是否必填
+                                def: this.dataTyleDefault(this.base_type_list[res] ? this.base_type_list[res].key : ''), // 默认值
+                                desc: '', // 字段描述
+                            });
+                        }
+
+                    }
+                }
+                parse(data);
+                this.sampleModal.data = ary;
+                this.sampleModal.type = type;
                 this.sampleModal.status = true;
             },
 
             /**
              * 分解获取form-data数据
              */
-            resolveFormDataSample() {
+            resolveFormDataSample(type) {
+                // key: '',
+                // desc: '',
+                // type: 'string', // string->text file->file
+                // value: '',
+                // file: ''
+                let data=this.form_data.request.form_data_sample,
+                    ary=[];
+                for(let i = 0; i < data.length; i++) {
+                   
+                    ary.push({
+                        name: data[i].key,
+                        type_name: this.base_type_list[data[i].type].value,
+                        type:  this.base_type_list[data[i].type].key,
+                        is_required: '0', // 是否必填
+                        def: this.base_type_list[data[i].type].def,
+                        desc: data[i].desc// 字段描述
+                    })
+                }
+                
+                this.sampleModal.data = ary;
+                this.sampleModal.type = type;
+                this.sampleModal.status = true;
+            },
 
+            sampleModalSubmit() {
+                // 添加到request
+                if(this.sampleModal.type === 0) {
+                    this.form_data.request.filed = this.sampleModal.data;
+                }
+                // 添加到response
+                else if(this.sampleModal.type === 1){
+                    this.form_data.response.filed = this.sampleModal.data;
+                }
+                else {
+                    this.$Message.error('添加字段错误：无法找到添加类别，请重新操作！')
+                }
             }
 
 
@@ -552,23 +642,23 @@
                     });
                 }
             },
-            'form_data_push_data.desc'(val, oldVal) {
-                if(val) {
-                    const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
-                    this.form_data.request.form_data_sample.push(copy_obj);
-                    this.$nextTick(() => {
-                        this.form_data_push_data.desc = '';
-                        this.$refs[`form_data_sample_desc_${this.form_data.request.form_data_sample.length-1}`][0].focus();
-                    });
-                }
-            },
+            // 'form_data_push_data.desc'(val, oldVal) {
+            //     if(val) {
+            //         const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
+            //         this.form_data.request.form_data_sample.push(copy_obj);
+            //         this.$nextTick(() => {
+            //             this.form_data_push_data.desc = '';
+            //             this.$refs[`form_data_sample_desc_${this.form_data.request.form_data_sample.length-1}`][0].focus();
+            //         });
+            //     }
+            // },
             'form_data_push_data.type'(val, oldVal) {
-                if(val!='0') {
+                if(val!='string') {
                     const copy_obj = this.$utils.deepCopy(this.form_data_push_data);
                     this.form_data.request.form_data_sample.push(copy_obj);
                     this.$nextTick(() => {
                         // 重置默认值 并且让key选中 this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
-                        this.form_data_push_data.type = '0';
+                        this.form_data_push_data.type = 'string';
                         this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
                     });
                 }
