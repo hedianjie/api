@@ -254,6 +254,7 @@
         padding: 7px;
         border-bottom: 1px solid #e3e8ee;
         display: flex;
+		justify-content: space-between;
         align-items: center;
         line-height: 28px;
         margin-bottom: 10px;

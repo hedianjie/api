@@ -95,7 +95,10 @@ axios.interceptors.response.use(
   },
 
   // 接收响应失败
-  err => Promise.reject(err) && Message.error(`请求失败：${err}`)
+  err => {
+    Message.error(`请求失败：${err}`);
+    return Promise.reject(err);
+  }
 
 )
 

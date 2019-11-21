@@ -16,9 +16,13 @@
                                 type="ios-arrow-back"
                                 size="16"
                             />
-                            {{project.project_name}} - 添加API
+                            {{project.project_name}} - {{apiId ? '编辑' : '添加'}}API
                         </a>
                     </h4>
+                    <div class="api-content-url-btn">
+                        <Button @click="saveAPI" :loading="saveAPILoading" shape="circle" type="success" icon="ios-create" class="m-r-5">保存API</Button>
+                        <Button @click="delAPI" :loading="delAPILoading" v-if="apiId" shape="circle" type="default" icon="ios-trash">删除API</Button>
+                    </div>
                 </div>
                 <!-- 主体 -->
                 <div class="view-body">
@@ -28,11 +32,11 @@
                         :model="form_data"
                         :label-width="85"
                         :rules="form_rules" 
-                        :style="{width: '66.6666666666%'}"
                     >
                         <FormItem 
                             label="API：" 
                             prop="api_url"
+                            :style="{width: '66.6666666666%'}"
                         >
                             <Input 
                                 placeholder="请输入API地址" 
@@ -42,6 +46,7 @@
                         <FormItem 
                             label="API描述：" 
                             prop="api_desc"
+                            :style="{width: '66.6666666666%'}"
                         >
                             <Input
                                 placeholder="请输入API描述" 
@@ -51,6 +56,7 @@
                         <FormItem 
                             label="请求方式：" 
                             prop="api_methods"
+                            :style="{width: '66.6666666666%'}"
                         >
                             <RadioGroup 
                                 v-model="form_data.api_methods" 
@@ -69,6 +75,7 @@
                         </FormItem>
                         <FormItem 
                             label="headers："
+                            :style="{width: '66.6666666666%'}"
                         >
                             <table 
                                 class="h-headers-table" 
@@ -176,7 +183,9 @@
                                 v-show="base_tab === 0"
                             >
                                 <!-- 请求方式 -->
-                                    <FormItem>
+                                    <FormItem 
+                                        :style="{width: '66.6666666666%'}"
+                                    >
                                         <RadioGroup 
                                             v-model="form_data.request.request_type"
                                         >
@@ -217,6 +226,7 @@
                                     v-if="form_data.request.request_type === '2' || form_data.request.request_type === '3'" 
                                     label="请求示例：" 
                                     prop="request.sample"
+                                    :style="{width: '66.6666666666%'}"
                                 >
                                     <Button 
                                         @click="resolveSample(0)" 
@@ -242,7 +252,7 @@
                                     v-else-if="form_data.request.request_type === '1'" 
                                     label="请求示例：" 
                                     prop="request.sample" 
-                                    :style="{'min-height': '76px'}"
+                                    :style="{'min-height': '90px',width: '66.6666666666%'}"
                                 >
                                     <Button 
                                         @click="resolveFormDataSample(0)" 
@@ -343,16 +353,31 @@
                                         </tbody>
                                     </table>
                                 </FormItem>
+                                <!-- 字段搜索 有字段 并且不是none情况 -->
+                                <FormItem 
+                                    v-if="form_data.request.request_type !== '0' && form_data.request.filed.length"
+                                    label="字段搜索："
+                                    :style="{width: '66.6666666666%'}"
+                                >
+                                    <Input 
+                                        placeholder="搜索查找字段名称（不区分大小写）" 
+                                        suffix="ios-search"
+                                        clearable
+                                        v-model="request_filed_search"
+                                    />
+                                </FormItem>
                                 <!-- 请求字段列表 -->
-                                <template v-if="form_data.request_type !== '0'">
+                                <template v-if="form_data.request.request_type !== '0'">
                                     <div 
                                         v-for="(item, index) in form_data.request.filed" 
                                         :key="index" 
-                                        class="group-layout"
+                                        class="group-layout col-sm-3"
+                                        :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.request.filed.length - 1) ? '1px solid #e3e8ee' : 'none'}"
+                                        v-show="requestFiledSearch(item.name)"
                                     >
                                         <div 
                                             class="group-title" 
-                                            v-html="`request 字段：<b style='font-weight:400;padding:0 4px;border-radius:3px;background:#2d8cf0;color:#fff;'>${item.name}</b>`"
+                                            v-html="`字段：<b style='font-weight:400;padding:0 4px;border-radius:3px;background:#2d8cf0;color:#fff;'>${item.name}</b>`"
                                         ></div>
                                         <div class="group-actions">
                                             <a 
@@ -402,20 +427,26 @@
                                                     <Radio label="1"><span class="color-error">必填</span></Radio>
                                                 </RadioGroup>
                                             </FormItem>
-                                            <FormItem 
+                                            <!-- <FormItem 
                                                 label="默认值：" 
                                                 :prop="`request.filed.${index}.def`" 
                                                 :rules="form_rules.def"
+                                            > -->
+                                            <FormItem 
+                                                label="默认值：" 
                                             >
                                                 <Input 
                                                     v-model="item.def" 
                                                     placeholder="请输入默认值"
                                                 />
                                             </FormItem>
-                                            <FormItem 
+                                            <!-- <FormItem 
                                                 label="字段描述：" 
                                                 :prop="`request.filed.${index}.desc`" 
                                                 :rules="form_rules.desc"
+                                            > -->
+                                            <FormItem 
+                                                label="字段描述：" 
                                             >
                                                 <Input 
                                                     v-model="item.desc" 
@@ -436,7 +467,11 @@
                             </div>
                             <div class="tab-container-list" v-show="base_tab === 1">
                                 <!-- 响应示例 -->
-                                <FormItem label="响应示例：" prop="response.sample">
+                                <FormItem 
+                                    label="响应示例：" 
+                                    prop="response.sample"
+                                    :style="{width: '66.6666666666%'}"
+                                >
                                     <Button 
                                         @click="resolveSample(1)" 
                                         shape="circle" 
@@ -456,47 +491,30 @@
                                         rows="6" 
                                     ></textarea>
                                 </FormItem>
+                                <!-- 字段搜索 有字段 -->
+                                <FormItem 
+                                    v-if="form_data.response.filed.length"
+                                    label="字段搜索："
+                                    :style="{width: '66.6666666666%'}"
+                                >
+                                    <Input 
+                                        placeholder="搜索查找字段名称（不区分大小写）" 
+                                        suffix="ios-search"
+                                        clearable
+                                        v-model="response_filed_search"
+                                    />
+                                </FormItem>
                                 <!-- 响应字段列表 -->
-                                <!-- <div v-for="(item, index) in form_data.response.filed" :key="index" class="group-layout">
-                                    <div class="group-title" v-html="`response-字段-<b >${item.name}</b>`"></div>
-                                    <div class="group-actions">
-                                        <a herf="javascript:void(0);" title="删除字段">
-                                            <Icon type="ios-trash" size="20"/>
-                                        </a>
-                                    </div>
-
-                                    <div class="group-container">
-                                        <FormItem label="字段名称：" :prop="`response.filed.${index}.name`" :rules="form_rules.name">
-                                            <Input v-model="item.name" placeholder="请输入字段名称"/>
-                                        </FormItem>
-                                        <FormItem label="字段类型：" :prop="`response.filed.${index}.type`" :rules="form_rules.type">
-                                           <Select v-model="item.type" filterable>
-                                                <Option value="">- 请选择 -</Option>
-                                                <Option v-for="item2 in base_type_list" :key="item2.key" :value="item2.key">{{item2.value}}</Option>
-                                            </Select>
-                                        </FormItem>
-                                        <FormItem label="是否必填：" :prop="`response.filed.${index}.is_required`" :rules="form_rules.is_required">
-                                            <RadioGroup v-model="item.is_required">
-                                                <Radio label="0"><span class="color-disabled">选填</span></Radio>
-                                                <Radio label="1"><span class="color-error">必填</span></Radio>
-                                            </RadioGroup>
-                                        </FormItem>
-                                        <FormItem label="默认值：" :prop="`response.filed.${index}.def`" :rules="form_rules.def">
-                                            <Input v-model="item.def" placeholder="请输入默认值"/>
-                                        </FormItem>
-                                        <FormItem label="字段描述：" :prop="`response.filed.${index}.desc`" :rules="form_rules.desc">
-                                            <Input v-model="item.desc" type="textarea" :autosize="{ minRows: 3}" placeholder="请输入字段描述"/>
-                                        </FormItem>
-                                    </div>
-                                </div> -->
                                 <div 
                                     v-for="(item, index) in form_data.response.filed" 
                                     :key="index" 
                                     class="group-layout"
+                                    :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.response.filed.length - 1) ? '1px solid #e3e8ee' : 'none'}"
+                                    v-show="responseFiledSearch(item.name)"
                                 >
                                     <div 
                                         class="group-title" 
-                                        v-html="`response 字段：<b style='font-weight:400;padding:0 4px;border-radius:3px;background:#2d8cf0;color:#fff;'>${item.name}</b>`"
+                                        v-html="`字段：<b style='font-weight:400;padding:0 4px;border-radius:3px;background:#2d8cf0;color:#fff;'>${item.name}</b>`"
                                     ></div>
                                     <div class="group-actions">
                                         <a 
@@ -546,20 +564,26 @@
                                                 <Radio label="1"><span class="color-error">必填</span></Radio>
                                             </RadioGroup>
                                         </FormItem>
-                                        <FormItem 
+                                        <!-- <FormItem 
                                             label="默认值：" 
                                             :prop="`response.filed.${index}.def`" 
                                             :rules="form_rules.def"
+                                        > -->
+                                        <FormItem 
+                                            label="默认值：" 
                                         >
                                             <Input 
                                                 v-model="item.def" 
                                                 placeholder="请输入默认值"
                                             />
                                         </FormItem>
-                                        <FormItem 
+                                        <!-- <FormItem 
                                             label="字段描述：" 
                                             :prop="`response.filed.${index}.desc`" 
                                             :rules="form_rules.desc"
+                                        > -->
+                                        <FormItem 
+                                            label="字段描述：" 
                                         >
                                             <Input 
                                                 v-model="item.desc" 
@@ -570,7 +594,7 @@
                                         </FormItem>
                                     </div>
                                 </div>
-                                <Button type="success" long @click="addResponseFiled()">继续添加字段</Button>
+                                <Button type="success" long @click="addResponseFiled()">点击添加response字段</Button>
                             </div>
                         </div>
                     </Form>
@@ -607,6 +631,9 @@
         computed: {
             project() {
                 return this.$store.state.project;
+            },
+            apiId() {
+                return this.$route.query.id;
             }
         },
         data() {
@@ -721,6 +748,10 @@
                     def: {required: true, message: '请填写默认值！', trigger: 'blur'},
                     desc: {required: true, message: '请填写字段描述！', trigger: 'blur'},
                 },
+
+                request_filed_search: '',
+                response_filed_search: '',
+
                 // 设置请求头
                 headers: [],
 
@@ -730,6 +761,10 @@
                     data: [],
                     type: null, // 0->request 1->response
                 },
+
+                saveAPILoading: false,
+                delAPILoading: false,
+
 
 
 
@@ -796,6 +831,18 @@
                         _this.$Message.warning('重新保存后生效，请记得保存！')
                     }
                 })
+            },
+            /**
+             * request字段搜索
+             */
+            requestFiledSearch(name) {
+                return !this.request_filed_search || name.toLocaleLowerCase().indexOf(this.request_filed_search.toLocaleLowerCase()) !== -1;
+            },
+            /**
+             * response字段搜索
+             */
+            responseFiledSearch(name) {
+                return !this.response_filed_search || name.toLocaleLowerCase().indexOf(this.response_filed_search.toLocaleLowerCase()) !== -1;
             },
             /**
              * 删除请求头
@@ -971,7 +1018,7 @@
                         break;
                     }
                     default: {
-                        _this.$Message.error('添加字段错误：无法找到添加类别，请重新操作！');
+                        this.$Message.error('添加字段错误：无法找到添加类别，请重新操作！');
                         return;
                     }
                 }
@@ -1008,15 +1055,70 @@
                 else {
                     // 添加到request
                     if(sampleType === 0) {
-                        _this.form_data.request.filed = sampleModalData;
+                        this.form_data.request.filed = sampleModalData;
                     }
                     // 添加到response
                     else if(sampleType === 1){
-                        _this.form_data.response.filed = sampleModalData;
+                        this.form_data.response.filed = sampleModalData;
                     }
                 }
 
                 
+            },
+
+            /**
+             * 保存API
+             */
+            saveAPI() {
+                this.$refs['form_base'].validate().then((valid) =>{
+                    if(valid) {
+                        this.saveAPILoading = true;
+                        
+                        // 格式化要发送的数据 headers-》json request-》json response-》json
+                        const data = this.$utils.deepCopy(this.form_data);
+                        data.headers = JSON.stringify(this.headers);
+                        data.request = JSON.stringify(data.request);
+                        data.response = JSON.stringify(data.response);
+                        data.project_id = this.project.id;
+                        data.id = this.apiId;
+                        
+                        this.$http.post('/api/addProjectApi', data).then(result => {
+                            this.$Message.success(result.msg);
+                            this.$router.push({name: 'ApiIndex'});
+                        })
+                        .finally(() => this.saveAPILoading = false);
+
+                    }
+                    else {
+                        this.$Message.error('表单验证失败，请有效填写！');
+                    }
+                })
+            },
+
+            /**
+             * 删除API
+             */
+            delAPI(){
+                if(this.apiId) {
+                    const _this = this;
+                    this.$Modal.confirm({
+                        title: '系统提示',
+                        content: '是否确认删除当前项目的API？',
+                        onOk() {
+                            // 开启删除按钮loading
+                            _this.delAPILoading = true;
+                            // axios delete传参?拼接
+                            _this.$http.delete('/api/delProjectApi?id=' + _this.apiId).then(result =>{
+                                _this.$Message.success(result.msg);
+                                _this.$router.push({name: 'ApiIndex'});
+                            })
+                            .finally(() =>_this.delAPILoading = false);
+                        }
+                    });
+                }
+                else {
+                    this.$Message.error('系统异常，请重试……');
+                }
             }
 
 
@@ -1099,6 +1201,13 @@
                         this.$refs[`form_data_sample_key_${this.form_data.request.form_data_sample.length-1}`][0].focus();
                     });
                 }
+            },
+
+            //检测请求方式变更 清空示例和字段
+            'form_data.request.request_type'(val, oldVal) {
+                this.form_data.request.sample = '';
+                this.form_data.request.form_data_sample = [];
+                this.form_data.request.filed = [];
             }
         }
     }
@@ -1141,8 +1250,9 @@
     }
     .group-layout {
         border: 1px solid #e3e8ee;
+        border-right: 0;
         position: relative;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
     .group-layout .group-title{
         position: absolute;
@@ -1219,6 +1329,10 @@
     }
     .sample-btn.btn-second{
         top: 66px;
+    }
+
+    .api-content-url-btn{
+        display: flex;
     }
 </style>
 <style>

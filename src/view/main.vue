@@ -163,6 +163,9 @@
                             _this.$Message.success(result.msg);
                             _this.modal_status = false;
                             _this.initProjectList();
+                            // _this.modal_del_loading = false;
+                        })
+                        .finally(()=>{
                             _this.modal_del_loading = false;
                         })
                     }

@@ -51,6 +51,7 @@
             }
         },
         mounted() {
+            console.log(this.$route.query.userId)
         },
         watch: {
             project(val, oldVal) {

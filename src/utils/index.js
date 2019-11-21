@@ -30,7 +30,7 @@ class Utils {
      */
     deepCopy(obj) {
         try {
-           return Object.assign({}, obj);
+           return new Function(`return ${JSON.stringify(obj)}`)();
         }
         catch(e) {
             try {
