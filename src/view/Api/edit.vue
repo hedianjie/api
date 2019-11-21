@@ -409,7 +409,6 @@
                                                     v-model="item.type" 
                                                     filterable
                                                 >
-                                                    <Option value="">- 请选择 -</Option>
                                                     <Option 
                                                         v-for="item2 in base_type_list" 
                                                         :key="item2.key" 
@@ -546,7 +545,6 @@
                                                 v-model="item.type" 
                                                 filterable
                                             >
-                                                <Option value="">- 请选择 -</Option>
                                                 <Option 
                                                     v-for="item2 in base_type_list" 
                                                     :key="item2.key" 
