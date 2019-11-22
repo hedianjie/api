@@ -11,41 +11,41 @@ export default new Router({
     mode: 'hash',
     routes: [
         {
-            path: '/home',
-            redirect: '/home/index',
+            path: '/view',
+            redirect: '/view/homeIndex',
             component: main,
             children: [
                 {
-                    path: '/home/index',
+                    path: '/view/homeIndex',
                     name : 'HomeIndex',
                     component: homeIndex
                 }
             ]
         },
         {
-            path: '/api',
-            redirect: '/api/index',
+            path: '/view',
+            redirect: '/view/apiEdit',
             component: main,
             children: [
                 {
-                    path: '/api/edit',
+                    path: '/view/apiEdit',
                     name: 'ApiEdit',
                     component: apiEdit
                 }
             ]
         },
         {
-            path: '/api',
-            redirect: '/api/index',
+            path: '/view',
+            redirect: '/view/apiIndex',
             component: main,
             children: [
                 {
-                    path: '/api/index',
+                    path: '/view/apiIndex',
                     name: 'ApiIndex',
                     component: apiIndex
                 }
             ]
         },
-        { path: '/', redirect: '/home/index'},
+        { path: '/', redirect: '/view/homeIndex'},
     ]
 })

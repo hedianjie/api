@@ -181,7 +181,7 @@
                 // 设置当前浏览项目cookie
                 this.$cookie.set('x-cookie-project', JSON.stringify(item));
                 // 如果单签页不是ApiIndex 跳转到ApiIndex页
-                if(this.$route.path !== '/api/index') {
+                if(this.$route.path !== '/view/apiIndex') {
                     this.$router.push({name: 'ApiIndex'});
                 }
                 
@@ -315,6 +315,13 @@
     color:#ddd ;
     background: #3399ff;
     border: 1px solid #ddd;
+}
+
+tt, code, kbd, samp {
+  font-family: Consolas, Monaco, 'Andale Mono', monospace;
+  background: #f4f4f4;
+  padding: 1px 5px;
+  border-radius: 5px;
 }
 
 

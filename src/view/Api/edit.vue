@@ -239,6 +239,7 @@
                                         size="small" 
                                         class="sample-btn btn-second"
                                     >测试请求</Button>
+                                    <!-- <vue-json-editor v-model="form_data.request.sample"></vue-json-editor> -->
                                     <textarea 
                                         style="min-height:136px;" 
                                         class="ivu-input" 
@@ -625,7 +626,9 @@
     </div>
 </template>
 <script>
+// import vueJsonEditor from 'vue-json-editor'
     export default {
+        // components: {vueJsonEditor},
         computed: {
             project() {
                 return this.$store.state.project;
@@ -917,6 +920,7 @@
                         baseData = this.form_data.response.sample;
                     }
                 }
+                console.log(baseData); return;
                 try{
                     data = eval(baseData);
                 }
@@ -1121,6 +1125,15 @@
 
 
         },
+        // directives: {
+
+        //     foucs: {
+        //         bind(el) {
+        //             el.focus();
+        //         }
+        //     }
+
+        // },
 
         watch: {
             /**

@@ -19,7 +19,7 @@
     html, body{
         width: 100%;
         height: 100%;
-        font-size: 14px;
+        font-size: 13px;
         color: #333;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
     }
