@@ -38,8 +38,16 @@
             title="添加项目"
         >
             <div class="form-horizontal">
-                <div class="color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 请求会以url+端口号+api来请求</div>
-                <div class="m-t-5 m-b-15 color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 例如：http://127.0.0.1:8080/api/login</div>
+                <Alert type="warning" show-icon style="line-height: 1.5; margin-bottom: 15px;">
+                    请求会以url+端口号+api来请求
+                    <template slot="desc">例如：http://127.0.0.1:8080/api/login</template>
+                </Alert>
+                <!-- <Alert type="warning" show-icon>
+                    请求会以url+端口号+api来请求
+                    <template slot="desc">例如：http://127.0.0.1:8080/api/login<template>
+                </Alert> -->
+                <!-- <div class="color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 请求会以url+端口号+api来请求</div>
+                <div class="m-t-5 m-b-15 color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 例如：http://127.0.0.1:8080/api/login</div> -->
 
                 <Form ref="project_modal" :model="modal_data" :rules="modal_data_rule" label-position="left" :label-width="85" >
                     <FormItem label="项目名称：" prop="project_name">

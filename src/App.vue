@@ -246,13 +246,13 @@
     .view-container{
         padding: 10px;
         margin: 10px;
-        border: 1px solid #e3e8ee;
+        border: 1px solid #dcdee2;
         border-radius: 3px;
         background: #fff;
     }
     .view-header{
         padding: 7px;
-        border-bottom: 1px solid #e3e8ee;
+        border-bottom: 1px solid #dcdee2;
         display: flex;
 		justify-content: space-between;
         align-items: center;
@@ -288,4 +288,10 @@
 	/* .ivu-form-item{
 		margin-bottom: 15px;
 	} */
+	.ivu-alert{
+		margin-bottom: 0;
+	}
+	.ivu-alert,.ivu-alert-icon,.ivu-alert-message{
+		line-height: 16px;
+	}
 </style>

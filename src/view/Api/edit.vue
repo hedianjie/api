@@ -86,8 +86,8 @@
                                             <th colspan="4">添加请求头</th>
                                         </tr>
                                         <tr>
-                                            <th width="240">key</th>
-                                            <th width="240">value</th>
+                                            <th width="240">key(字段名)</th>
+                                            <th width="240">value(示例)</th>
                                             <th>描述</th>
                                             <th width="30"></th>
                                         </tr>
@@ -95,7 +95,7 @@
                                     <tbody>
                                     
                                         <tr 
-                                            v-for="(item, index) in headers"   
+                                            v-for="(item, index) in form_data.headers"   
                                             :key="index"
                                         >
                                             <td>
@@ -373,7 +373,7 @@
                                         v-for="(item, index) in form_data.request.filed" 
                                         :key="index" 
                                         class="group-layout col-sm-3"
-                                        :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.request.filed.length - 1) ? '1px solid #e3e8ee' : 'none'}"
+                                        :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.request.filed.length - 1) ? '1px solid #dcdee2' : 'none'}"
                                         v-show="requestFiledSearch(item.name)"
                                     >
                                         <div 
@@ -509,7 +509,7 @@
                                     v-for="(item, index) in form_data.response.filed" 
                                     :key="index" 
                                     class="group-layout"
-                                    :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.response.filed.length - 1) ? '1px solid #e3e8ee' : 'none'}"
+                                    :style="{'border-right': ((index + 1) % 4 ===0 || index === form_data.response.filed.length - 1) ? '1px solid #dcdee2' : 'none'}"
                                     v-show="responseFiledSearch(item.name)"
                                 >
                                     <div 
@@ -689,9 +689,10 @@
                 base_tab: 0, 
                 // 表单数据
                 form_data: {
-                    api_url: '/api/login', // 接口地址
-                    api_desc: '这是一个登陆接口', // 接口描述
+                    api_url: '', // 接口地址
+                    api_desc: '', // 接口描述
                     api_methods: '1', // 请求方式(默认post)
+                    headers: [],// 设置请求头
                     request: { // 请求
                         sample: '', // 请求示例
                         form_data_sample: [], // 表单提交请求示例
@@ -715,7 +716,7 @@
                         ]
                     },
                     response: { // 请求
-                        sample: '{}', // 请求示例
+                        sample: '', // 请求示例
                         filed: [
                             // {
                             //     name: 'username', // 字段名称
@@ -754,7 +755,7 @@
                 response_filed_search: '',
 
                 // 设置请求头
-                headers: [],
+                // headers: [],
 
                 // 解析请求示例modal数据
                 sampleModal: {
@@ -766,7 +767,7 @@
                 saveAPILoading: false,
                 delAPILoading: false,
 
-
+                init_status: true, // 判断初始化是否完成
 
 
 
@@ -849,7 +850,7 @@
              * 删除请求头
              */
             headersParameterDel(index) {
-                this.headers.splice(index, 1);
+                this.form_data.headers.splice(index, 1);
             },
             /**
              * 删除form-data数据
@@ -920,7 +921,6 @@
                         baseData = this.form_data.response.sample;
                     }
                 }
-                console.log(baseData); return;
                 try{
                     data = eval(baseData);
                 }
@@ -1078,7 +1078,7 @@
                         
                         // 格式化要发送的数据 headers-》json request-》json response-》json
                         const data = this.$utils.deepCopy(this.form_data);
-                        data.headers = JSON.stringify(this.headers);
+                        data.headers = JSON.stringify(data.headers);
                         data.request = JSON.stringify(data.request);
                         data.response = JSON.stringify(data.response);
                         data.project_id = this.project.id;
@@ -1125,15 +1125,20 @@
 
 
         },
-        // directives: {
 
-        //     foucs: {
-        //         bind(el) {
-        //             el.focus();
-        //         }
-        //     }
-
-        // },
+        mounted() {
+            if(this.apiId) {
+                this.init_status = false;
+                this.$http.get('/api/getProjectApiInfo', {params: {id: this.apiId}}).then(result => {
+                    const data = result.data;
+                    data.headers = JSON.parse(data.headers);
+                    data.request = JSON.parse(data.request);
+                    data.response = JSON.parse(data.response);
+                    this.form_data = data;
+                })
+                .finally(() => this.$nextTick(() => this.init_status = true));
+            }
+        },
 
         watch: {
             /**
@@ -1142,30 +1147,30 @@
             'headers_push_data.key'(val, oldVal) {
                 if(val) {
                     const copy_obj = this.$utils.deepCopy(this.headers_push_data);
-                    this.headers.push(copy_obj);
+                    this.form_data.headers.push(copy_obj);
                     this.$nextTick(() => {
                         this.headers_push_data.key = '';
-                        this.$refs[`headers_parameter_key_${this.headers.length-1}`][0].focus();
+                        this.$refs[`headers_parameter_key_${this.form_data.headers.length-1}`][0].focus();
                     });
                 }
             },
             'headers_push_data.value'(val, oldVal) {
                 if(val) {
                     const copy_obj = this.$utils.deepCopy(this.headers_push_data);
-                    this.headers.push(copy_obj);
+                    this.form_data.headers.push(copy_obj);
                     this.$nextTick(() => {
                         this.headers_push_data.value = '';
-                        this.$refs[`headers_parameter_value_${this.headers.length-1}`][0].focus();
+                        this.$refs[`headers_parameter_value_${this.form_data.headers.length-1}`][0].focus();
                     });
                 }
             },
             'headers_push_data.desc'(val, oldVal) {
                 if(val) {
                     const copy_obj = this.$utils.deepCopy(this.headers_push_data);
-                    this.headers.push(copy_obj);
+                    this.form_data.headers.push(copy_obj);
                     this.$nextTick(() => {
                         this.headers_push_data.desc = '';
-                        this.$refs[`headers_parameter_desc_${this.headers.length-1}`][0].focus();
+                        this.$refs[`headers_parameter_desc_${this.form_data.headers.length-1}`][0].focus();
                     });
                 }
             },
@@ -1216,9 +1221,12 @@
 
             //检测请求方式变更 清空示例和字段
             'form_data.request.request_type'(val, oldVal) {
-                this.form_data.request.sample = '';
-                this.form_data.request.form_data_sample = [];
-                this.form_data.request.filed = [];
+                // 初始化完成并且赋值后
+                if(this.init_status) {
+                    this.form_data.request.sample = '';
+                    this.form_data.request.form_data_sample = [];
+                    this.form_data.request.filed = [];
+                }
             }
         }
     }
@@ -1232,7 +1240,7 @@
     }
 
     .tab-groups{
-        border-bottom: 1px solid #e3e8ee;
+        border-bottom: 1px solid #dcdee2;
         margin-bottom: 15px;
 
     }
@@ -1240,16 +1248,16 @@
         float: left;
         padding: 3px 24px;
         font-size: 13px;
-        border-top: 1px solid #e3e8ee;
-        border-right: 1px solid #e3e8ee;
-        border-bottom:  1px solid #e3e8ee;
+        border-top: 1px solid #dcdee2;
+        border-right: 1px solid #dcdee2;
+        border-bottom:  1px solid #dcdee2;
         position: relative;
         bottom: -1px;
-        background: #e3e8ee;
+        background: #dcdee2;
         cursor: pointer;
     }
     .tab-groups .tab-groups-list:first-child{
-        border-left: 1px solid #e3e8ee;
+        border-left: 1px solid #dcdee2;
     }
     .tab-groups .tab-groups-list.active{
         background: #fff;
@@ -1260,7 +1268,7 @@
         padding: 0 10px;
     }
     .group-layout {
-        border: 1px solid #e3e8ee;
+        border: 1px solid #dcdee2;
         border-right: 0;
         position: relative;
         margin-bottom: 20px;
@@ -1306,8 +1314,8 @@
     }
 
     .h-headers-table{
-        border-left: 1px solid #e3e8ee;
-        border-top: 1px solid #e3e8ee;
+        border-left: 1px solid #dcdee2;
+        border-top: 1px solid #dcdee2;
         width: 100%;
     }
     .h-headers-table thead tr:first-child{
@@ -1315,8 +1323,8 @@
     }
     .h-headers-table td,
     .h-headers-table th{
-        border-right: 1px solid #e3e8ee;
-        border-bottom: 1px solid #e3e8ee;
+        border-right: 1px solid #dcdee2;
+        border-bottom: 1px solid #dcdee2;
         padding: 4px 4px;
         text-align: center;
     }

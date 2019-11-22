@@ -19,13 +19,13 @@
     
         </div>
         <div class="main">
-            <scroll-bar :style="{height: '100%', padding: '10px'}">
+            <!-- <scroll-bar :style="{height: '100%', padding: '10px'}"> -->
                 <div style="padding: 10px 0;">
                     <!-- apiView -->
                     <div v-for="(item, index) in api_list" :key="index" class="api-content">
                         <!-- api地址 -->
                         <div class="api-content-url">
-                            <h2 class="color-primary">接口：{{item.api_url}}</h2>
+                            <h2 class="color-primary"><span class="f-s-22">{{item.api_url}}</span></h2>
                             <div class="api-content-url-btn">
                                 <HButton @click="toEdit(item.id)" icon="ios-create" class="m-r-5">编辑</HButton>
                                 <HButton @click="delAPI(item.id)" icon="ios-trash">删除</HButton>
@@ -34,13 +34,58 @@
                         <!-- 华丽分割线 -->
                         <div class="api-content-line"></div>
                         <!-- api概述 -->
-                        <div class="api-content-explain">概述：{{item.api_desc}}</div>
+                        <!-- <div class="api-content-explain">概述：{{item.api_desc}}</div> -->
                         <!-- api methods -->
-                        <div class="api-content-methods">方式：【{{methods_list[item.api_methods]}}】</div>
+                        <!-- <div class="api-content-methods">方式：【{{methods_list[item.api_methods]}}】</div> -->
+                        <!-- api概述 -->
+                        <div class="api-content-flex">
+                            <div class="api-content-flex-label">API概述：</div>
+                            <div class="api-content-flex-content">{{item.api_desc}}</div>
+                        </div>
+                        <!-- api methods -->
+                        <div class="api-content-flex">
+                            <div class="api-content-flex-label">请求方式：</div>
+                            <div class="api-content-flex-content">
+                                <Tag color="blue">{{methods_list[item.api_methods]}}</Tag>
+                            </div>
+                        </div>
+                        <!-- headers -->
+                        <div class="api-content-flex">
+                            <div class="api-content-flex-label">请求头：</div>
+                            <table v-if="item.headers.length" class="api-content-flex-content api-content-table" cellspacing="0" cellpadding="0">
+                                <thead>
+                                    <tr>
+                                        <td>key(字段名)</td>
+                                        <td>value(示例)</td>
+                                        <td>描述</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(headers_item, headers_index) in item.headers" :key="headers_index">
+                                        <td>{{headers_item.key}}</td>
+                                        <td>{{headers_item.value}}</td>
+                                        <td>{{headers_item.desc}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div v-else style="flex: 1">
+                                <Alert show-icon>暂无请求头参数说明！</Alert>
+                            </div>
+                        </div>
+                        <!-- Content-Type -->
+                        <div v-if="item.api_methods === '1'" class="api-content-flex">
+                            <div class="api-content-flex-label">发送方式：</div>
+                            <div v-if="item.api_methods !== '0'" class="api-content-flex-content">
+                                <Tag color="blue">{{application_list[item.request.request_type]}}</Tag>
+                            </div>
+                            <div v-else style="flex: 1">
+                                <Alert show-icon>无需参数！</Alert>
+                            </div>
+                        </div>
                         <!-- 调用接口字段解释 -->
                         <div class="api-content-flex">
-                            <div class="api-content-flex-label">参数：</div>
-                            <table class="api-content-flex-content api-content-parameter-table" cellspacing="0" cellpadding="0">
+                            <div class="api-content-flex-label">请求参数：</div>
+                            <table v-if="item.request.filed.length" class="api-content-flex-content api-content-table" cellspacing="0" cellpadding="0">
                                 <thead>
                                     <tr>
                                         <td>字段</td>
@@ -51,48 +96,62 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <template v-if="item.request.filed.length">
-                                        <tr v-for="(filed_item, filed_index) in item.request.filed" :key="filed_index">
-                                            <td>{{filed_item.name}}</td>
-                                            <td>{{filed_item.desc}}</td>
-                                            <td>[<span class="color-primary">{{filed_item.type_name}}</span>]</td>
-                                            <td v-html="filed_item.is_required === '0' ? '<span class=\'color-disabled\'>false</span>' : '<span class=\'color-error\'>true</span>'"><span class="color-error">true</span></td>
-                                            <!-- color-disabled -->
-                                            <td>{{filed_item.def}}</td>
-                                        </tr>
-                                    </template>
-                                    <template v-else>
-                                        <tr><td colspan="5">无需传递参数</td></tr>
-                                    </template>
+                                    <tr v-for="(filed_item, filed_index) in item.request.filed" :key="filed_index">
+                                        <td>{{filed_item.name}}</td>
+                                        <td>{{filed_item.desc}}</td>
+                                        <td>[<span class="color-primary">{{filed_item.type_name}}</span>]</td>
+                                        <td v-html="filed_item.is_required === '0' ? '<span class=\'color-disabled\'>false</span>' : '<span class=\'color-error\'>true</span>'"><span class="color-error">true</span></td>
+                                        <!-- color-disabled -->
+                                        <td>{{filed_item.def}}</td>
+                                    </tr>
                                 </tbody>
                             </table>
+                            <div v-else style="flex: 1">
+                                <Alert show-icon>暂无请求参数说明！</Alert>
+                            </div>
                         </div>
                         <!-- 调用接口示例 -->
                         <div class="api-content-flex">
                             <div class="api-content-flex-label">
-                                <span>示例：</span>
+                                <span>请求示例：</span>
                                 <br/>
-                                <a v-if="item.request.filed.length" title="复制示例" class="api-example-copy api-btn-default" href="javascript:void(0);">
+                                <a v-if="item.request.sample" title="复制示例" class="api-example-copy api-btn-default" href="javascript:void(0);">
                                     <Icon type="ios-copy" size="28" />
                                 </a>
                             </div>
-                            
-                            <div v-if="item.request.filed.length" class="api-content-flex-content api-content-parameter-example">
-                                <div class="api-example-show-all" @click="s ? s = null : s = 100">
+                            <!-- 如果textarea示例中有内容 现实taxtarea （sample） -->
+                            <div v-if="item.request.sample" class="api-content-flex-content api-content-parameter-example">
+                                <div class="api-example-show-all" @click="item.request_sample_maxHeight ? item.request_sample_maxHeight = null : item.request_sample_maxHeight = 100">
                                     <Icon type="ios-reorder"/>
                                 </div>
-                                <!-- <scroll-bar :styles="{'max-height': '200px'}"> -->
-                                <textarea @mousewheel.stop v-grow-height="{extra: 20, maxHeight: s}" class="api-example" v-html="item.request.sample"></textarea>
-                                <!-- </scroll-bar> -->
+                                <textarea disabled @mousewheel.stop v-grow-height="{extra: 20, maxHeight: item.request_sample_maxHeight}" class="api-example" v-html="item.request.sample"></textarea>
                             </div>
-                            <div v-else>
-                                无请求示例
+                            <!-- 如果表单提交示例中有内容 显示table（form_data_sample） -->
+                            <table v-else-if="item.request.form_data_sample.length" class="api-content-flex-content api-content-table" cellspacing="0" cellpadding="0">
+                                <thead>
+                                    <tr>
+                                        <td>字段名称</td>
+                                        <td>字段类型</td>
+                                        <td>示例</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(form_data_sample_item, form_data_sample_index) in item.request.form_data_sample" :key="form_data_sample_index">
+                                        <td>{{form_data_sample_item.key}}</td>
+                                        <td><span class="color-primary">{{form_data_sample_item.type === 'string' ? 'String' : 'File'}}</span></td>
+                                        <td>{{form_data_sample_item.type === 'string' ? form_data_sample_item.value : '文件上传'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <!-- 如果都没有值 -->
+                            <div style="flex: 1" v-else>
+                                <Alert show-icon>暂无请求示例！</Alert>
                             </div>
                         </div>
                         <!-- 返回接口字段解释 -->
                         <div class="api-content-flex">
-                            <div class="api-content-flex-label">返回：</div>
-                            <table class="api-content-flex-content api-content-parameter-table" cellspacing="0" cellpadding="0">
+                            <div class="api-content-flex-label">响应：</div>
+                            <table v-if="item.response.filed.length" class="api-content-flex-content api-content-table" cellspacing="0" cellpadding="0">
                                 <thead>
                                     <tr>
                                         <td>字段</td>
@@ -113,33 +172,57 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div v-else style="flex: 1">
+                                <Alert show-icon>暂无响应参数说明！</Alert>
+                            </div>
                         </div>
                         <!-- 返回接口示例 -->
                         <div class="api-content-flex">
                             <div class="api-content-flex-label">
-                                <span>示例：</span>
+                                <span>响应示例：</span>
                                 <br/>
-                                <a title="复制示例" class="api-example-copy api-btn-default" href="javascript:void(0);">
+                                <a v-if="item.response.sample" title="复制示例" class="api-example-copy api-btn-default" href="javascript:void(0);">
                                     <Icon type="ios-copy" size="28" />
                                 </a>
                             </div>
-                            <div class="api-content-flex-content api-content-parameter-example">
-                                <div class="api-example-show-all">
-                                    <Icon type="ios-reorder" />
+                            <div v-if="item.response.sample" class="api-content-flex-content api-content-parameter-example">
+                                <div class="api-example-show-all" @click="item.response_sample_maxHeight ? item.response_sample_maxHeight = null : item.response_sample_maxHeight = 100">
+                                    <Icon type="ios-reorder"/>
                                 </div>
-                                <scroll-bar :styles="{'max-height': '200px'}">
-                                    <textarea class="api-example" v-html="item.response.sample"></textarea>
-                                </scroll-bar>
+                                <textarea disabled @mousewheel.stop v-grow-height="{extra: 20, maxHeight: item.response_sample_maxHeight}" class="api-example" v-html="item.response.sample"></textarea>
+                            </div>
+                            <div style="flex: 1" v-else>
+                                <Alert show-icon>暂无响应示例！</Alert>
                             </div>
                         </div>
                     </div>
                 </div>
-            </scroll-bar>
+            <!-- </scroll-bar> -->
         </div>
     </div>
 </template>
 <script>
-    // import apiView from "@/view/Api/components/apiView.vue";
+    // 示例textarea
+    const change = (el) => {
+        let height,
+            style = el.style,
+            minHeight = 100,
+            extra = el.extra,
+            maxHeight = el.maxHeight;
+        el.style.height = minHeight + 'px';
+        if (el.scrollHeight > minHeight) {
+            if (maxHeight && el.scrollHeight > maxHeight) {
+                height = maxHeight;
+                style.overflowY = 'auto';
+            } else {
+                height = el.scrollHeight;
+                style.overflowY = 'hidden';
+            }
+            style.height = height + extra + 'px';
+            el.currHeight = parseInt(style.height);
+        }
+    }
+
     
     export default {
         computed: {
@@ -165,7 +248,17 @@
                     '4': 'Object',
                     '5': 'File'
                 },
-                s: 100
+                application_list: {
+                    '0': 'none',
+                    '1': 'application/form-data',
+                    '2': 'application/x-www-form-urlencoded',
+                    '3': 'params'
+                }
+
+                // 辅助作用 用来控制示例（sample）的展开收起
+                // sample: {
+                //     request: {}, response: {}
+                // }
             }
         },
     
@@ -177,13 +270,15 @@
              * 初始化根据项目id获取项目下的所有api
              */
             initList() {
-                this.$http.get('/api/getProjectApi', {params:{id: this.project.id}}).then(result =>{
+                this.$http.get('/api/getProjectApiList', {params:{id: this.project.id}}).then(result =>{
                     const data = result.data,
                         ary = [];
                     for(let i = 0; i < data.length; i++) {
                         data[i].headers = JSON.parse(data[i].headers);
                         data[i].request = JSON.parse(data[i].request);
                         data[i].response = JSON.parse(data[i].response);
+                        data[i].request_sample_maxHeight = 100;
+                        data[i].response_sample_maxHeight = 100;
                         ary.push(data[i])
                     }
                     this.api_list = ary;
@@ -229,6 +324,23 @@
             this.initList();
 
         },
+        directives: {
+            'growHeight': {
+                componentUpdated: function (el,binding) {
+                    el.extra = binding.value.extra;
+                    el.maxHeight = binding.value.maxHeight;
+                    change(el);
+                },
+                inserted: function (el, binding) {
+                    el.extra = binding.value.extra;
+                    el.maxHeight = binding.value.maxHeight;
+                    el.addEventListener('propertychange', () => change(el))
+                    el.addEventListener('input',  () => change(el))
+                    el.addEventListener('focus',  () => change(el))
+                    change(el);
+                }
+            }
+        },
         watch: {
             project(val, oldVal) {
                 this.initList();
@@ -237,6 +349,9 @@
     }
 </script>
 <style scoped>
+.main{
+    overflow: auto;
+}
     .api-warpper {
         padding-left: 320px;
         position: relative;
@@ -382,7 +497,7 @@
     margin-bottom: 20px;
     color: #657180;
     background: #fff;
-    border: 1px solid #e3e8ee;
+    border: 1px solid #dcdee2;
     border-radius: 3px;
     font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, \\5FAE\8F6F\96C5\9ED1, Arial, sans-serif;
 }
@@ -390,7 +505,7 @@
 .api-content-line {
     width: 100%;
     height: 0px;
-    border-top: 1px solid #e3e8ee
+    border-top: 1px solid #dcdee2;
 }
 
 .api-content:last-child {
@@ -418,9 +533,9 @@
     flex: 1;
 }
 
-.api-content-parameter-table {
-    border-left: 1px solid #e3e8ee;
-    border-top: 1px solid #e3e8ee;
+.api-content-table {
+    border-left: 1px solid #dcdee2;
+    border-top: 1px solid #dcdee2;
     border-right: none;
     border-bottom: none;
     line-height: 1.625;
@@ -430,40 +545,46 @@
     color: #000;
 }
 
-.api-content-parameter-table thead {
+.api-content-table thead {
     font-weight: 400;
     color: #464c5b;
     background: #f5f7f9;
 }
 
-.api-content-parameter-table td {
+.api-content-table td {
     min-height: 48px;
     padding: 4px 16px;
-    text-align: center;
-    border-right: 1px solid #e3e8ee;
-    border-bottom: 1px solid #e3e8ee;
+    text-align: left;
+    border-right: 1px solid #dcdee2;
+    border-bottom: 1px solid #dcdee2;
     border-left: none;
     border-top: none;
 }
-.api-content-parameter-table thead td{
+.api-content-table thead td{
     font-weight: bold;
     color: #464c5b;
+    white-space: nowrap;
 }
 
 .api-content-parameter-example {
     background: #fff;
-    border: 1px solid #e3e8ee;
+    border: 1px solid #dcdee2;
     border-radius: 3px;
     padding-bottom: 15px;
     position: relative;
 }
 
 .api-example {
+    display: block;
     width: 100%;
-    height: 100px;
-    /* height: 100%; */
-    border: 1px solid #e3e8ee;
-    padding: 8px 16px;
+    outline: none;
+    border: none;
+    padding: 4px 4px;
+    resize: none;
+    transition: height .15s ease-in-out;
+}
+.api-example:disabled{
+    background: #fff;
 }
 
 a.api-btn-default {
@@ -488,14 +609,20 @@ a.api-btn-default:active {
     text-align: center;
     left: 0;
     width: 100%;
-    border-top: 1px solid #e3e8ee;
+    border-top: 1px solid #dcdee2;
     background: #f5f7f9;
     cursor: pointer;
 }
-
+.api-content-flex-label{
+    width: 85px;
+    text-align: right;
+}
+.api-content-flex-content{
+    color: #333;
+}
 .api-content-line,
-.api-content-explain,
-.api-content-methods,
+/* .api-content-explain,
+.api-content-methods, */
 .api-content-flex {
     margin-bottom: 10px;
 }
