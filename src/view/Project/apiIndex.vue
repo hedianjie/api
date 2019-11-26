@@ -84,7 +84,7 @@
                         </div>
                         <!-- 调用接口字段解释 -->
                         <div class="api-content-flex">
-                            <div class="api-content-flex-label">请求参数：</div>
+                            <div class="api-content-flex-label">请求参数：<br><span class="color-error">改用高德API</span></div>
                             <table v-if="item.request.filed.length" class="api-content-flex-content api-content-table" cellspacing="0" cellpadding="0">
                                 <thead>
                                     <tr>
@@ -113,7 +113,7 @@
                         <!-- 调用接口示例 -->
                         <div class="api-content-flex">
                             <div class="api-content-flex-label">
-                                <span>请求示例：</span>
+                                <span>请求示例：<br><span class="color-error">改用jsontree</span></span>
                                 <br/>
                                 <a v-if="item.request.sample" title="复制示例" class="api-example-copy api-btn-default" href="javascript:void(0);">
                                     <Icon type="ios-copy" size="28" />
@@ -543,6 +543,7 @@
     overflow: hidden;
     border-radius: 3px;
     color: #000;
+    width: 100%;
 }
 
 .api-content-table thead {

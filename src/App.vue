@@ -245,6 +245,7 @@
     }
     .view-container{
         padding: 10px;
+		padding-top: 0;
         margin: 10px;
         border: 1px solid #dcdee2;
         border-radius: 3px;
@@ -291,7 +292,7 @@
 	.ivu-alert{
 		margin-bottom: 0;
 	}
-	.ivu-alert,.ivu-alert-icon,.ivu-alert-message{
+	/* .ivu-alert,.ivu-alert-icon,.ivu-alert-message{
 		line-height: 16px;
-	}
+	} */
 </style>

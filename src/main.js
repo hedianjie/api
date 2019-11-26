@@ -23,7 +23,10 @@ import {
     Form,
     FormItem,
     Alert,
-    Tag
+    Tag,
+    Dropdown,
+    DropdownMenu,
+    DropdownItem,
 } from 'iview';
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
@@ -39,6 +42,10 @@ Vue.component('Form', Form);
 Vue.component('FormItem', FormItem);
 Vue.component('Alert', Alert);
 Vue.component('Tag', Tag);
+Vue.component('Dropdown', Dropdown);
+Vue.component('DropdownMenu', DropdownMenu);
+Vue.component('DropdownItem', DropdownItem);
+
 
 /**
  * 路由拦截
@@ -46,21 +53,34 @@ Vue.component('Tag', Tag);
 
 router.beforeEach((to, from, next) => {
   // 跳转ApiIndex/ApiEdit拦截没有项目id
-  if( to.name && (to.name === 'ApiIndex' || to.name === 'ApiEdit' )) {
-    if(!store.state.project || !store.state.project.id) {
-      // 如果cookie中有project相关信息
-      const projectInfo = VueCookie.get('x-cookie-project');
-      if(projectInfo) {
-        store.state.project = JSON.parse(projectInfo)
-        // Vue.set(store.state, 'project', JSON.parse(projectInfo))
-      }
-      else {
-        // 如果没有 则跳转到首页 并且提示
-        Message.warning('进入页面失败，定向到首页');
-        router.push({name: 'HomeIndex'});
-        return;
-      }
-    }
+  // if( to.name && (to.name === 'ApiIndex' || to.name === 'ApiEdit' )) {
+  //   if(!store.state.project || !store.state.project.id) {
+  //     // 如果cookie中有project相关信息
+  //     const projectInfo = VueCookie.get('x-cookie-project');
+  //     if(projectInfo) {
+  //       store.state.project = JSON.parse(projectInfo)
+  //       // Vue.set(store.state, 'project', JSON.parse(projectInfo))
+  //     }
+  //     else {
+  //       // 如果没有 则跳转到首页 并且提示
+  //       Message.warning('进入页面失败，定向到首页');
+  //       router.push({name: 'HomeIndex'});
+  //       return;
+  //     }
+  //   }
+  // }
+  if(
+    to.name &&
+    // to.name != 'HomeIndex' && // 不是首页
+    to.name != 'LoginIndex' &&     // 不是登录页
+    to.name != '404Index' &&       // 不是404页
+    to.name != 'AboutIndex'        // 不是关于我们页
+  ) {
+    store.commit('routerAddRouters', {
+      url: to.path,
+      name: to.name,
+      realName: to.meta.realName
+    });
   }
   next();
    // to and from are both route objects. must call `next`.

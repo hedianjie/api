@@ -1,8 +1,8 @@
 <template>
     <div>
-        <scroll-bar 
+        <!-- <scroll-bar 
             :styles="{height: '100%'}"
-        >
+        > -->
             <div class="view-container">
                 <!-- 内容导航 -->
                 <div class="view-header">
@@ -599,7 +599,7 @@
                     </Form>
                 </div>
             </div>
-        </scroll-bar>
+        <!-- </scroll-bar> -->
 
         <Modal
             v-model="sampleModal.status"

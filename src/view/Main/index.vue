@@ -4,16 +4,18 @@
         <div class="layout-slidebar">
             <div class="slidebar-toolbar">
                 <div class="auth-avatar"><img src="https://dev-file.iviewui.com/userinfoPDvn9gKWYihR24SpgC319vXY8qniCqj4/avatar" alt=""></div>
-                <HButton 
+                <!-- <HButton 
                     @click="modalShow" 
                     theme="white" 
                     :only="true" 
                     icon="md-add"
-                >新建项目</HButton>
+                >新建项目</HButton> -->
             </div>
             <scroll-bar :styles="{height: '100%'}">
-                
-                <div 
+                <router-link :to="{name: 'HomeIndex'}" class="slidebar-list" :class="$route.name === 'HomeIndex' ? 'active' : ''"><Icon type="md-home" size="18" class="m-r-10"/><span>首页</span></router-link>
+                <router-link :to="{name: 'PeopleIndex'}" class="slidebar-list" :class="$route.name === 'PeopleIndex' ? 'active' : ''"><Icon type="md-people" size="18" class="m-r-10"/><span>人员管理</span></router-link>
+                <router-link :to="{name: 'ProjectIndex'}" class="slidebar-list" :class="$route.name === 'ProjectIndex' ? 'active' : ''"><Icon type="ios-albums" size="18" class="m-r-10"/><span>产品版本管理</span></router-link>
+                <!-- <div 
                     class="slidebar-list" 
                     v-for="(item, index) in project_list" 
                     :key="index" :class="project.id == item.id ? 'active' : ''"  
@@ -24,16 +26,20 @@
                         <div class="color-sub f-s-12">{{item.project_url}}</div>
                     </div>
                     <div class="project-operate" @click.stop="modalShow(item)"><Icon type="ios-create" size="18"/></div>
-                </div>
+                </div> -->
              
             </scroll-bar>
         </div>
         <div class="layout-main">
-            <router-view class="container"></router-view>
+            <div class="layout-main-container">
+                <div class="tag-nav-warpper"><tag-nav></tag-nav></div>
+                <router-view class="container"></router-view>
+            </div>
+            
         </div>
         <!-- <div class="layout-footer"></div> -->
 
-        <Modal 
+        <!-- <Modal 
             v-model="modal_status"
             title="添加项目"
         >
@@ -42,12 +48,6 @@
                     请求会以url+端口号+api来请求
                     <template slot="desc">例如：http://127.0.0.1:8080/api/login</template>
                 </Alert>
-                <!-- <Alert type="warning" show-icon>
-                    请求会以url+端口号+api来请求
-                    <template slot="desc">例如：http://127.0.0.1:8080/api/login<template>
-                </Alert> -->
-                <!-- <div class="color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 请求会以url+端口号+api来请求</div>
-                <div class="m-t-5 m-b-15 color-warning f-s-xs v-a-m"><Icon type="md-information-circle" color="#ff9900"/> 例如：http://127.0.0.1:8080/api/login</div> -->
 
                 <Form ref="project_modal" :model="modal_data" :rules="modal_data_rule" label-position="left" :label-width="85" >
                     <FormItem label="项目名称：" prop="project_name">
@@ -67,15 +67,18 @@
                 <Button type="primary" @click="modalSend" :loading="modal_submit_loading">保存</Button>
                 <Button type="default" @click="modal_status=false">取消</Button>
             </div>
-        </Modal>
+        </Modal> -->
     </div>
 </template>
 <script>
+    import TagNav from './components/tag-nav.vue'
     export default {
+        components: {TagNav},
         computed: {
-            project() {
-                return this.$store.state.project;
-            },
+            // project() {
+            //     return this.$store.state.project;
+            // },
+            
         },
         data() {
             return {
@@ -235,7 +238,7 @@
     left: 0;
     width: 250px;
     height: 100%;
-    padding-top: 60px;
+    padding-top: 50px;
     border-right: 1px solid #39435c;
     z-index: 1;
     background: #39435c;
@@ -268,16 +271,17 @@
  .slidebar-list{
     color: #ddd;
     font-size: 14px;
-    line-height: 46px;
+    height: 46px;
+    /* line-height: 46px; */
     padding-left: 10px;
-    padding-right: 43px;
+    padding-right: 10px;
     word-break: break-all;
     overflow: hidden;
     position: relative;
     display: flex;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
-    padding: 7px 10px;
+    /* padding: 10px 10px; */
     padding-left: 15px;
     background: #39435c;
     transition: background .15s ease-in-out;
@@ -330,6 +334,22 @@ tt, code, kbd, samp {
   background: #f4f4f4;
   padding: 1px 5px;
   border-radius: 5px;
+}
+
+.layout-main-container{
+    height: 100%;
+    padding-top: 40px;
+    position: relative;
+}
+
+.tag-nav-warpper{
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
 }
 
 

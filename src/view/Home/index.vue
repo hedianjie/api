@@ -1,6 +1,7 @@
 <template>
     <div class="api-warpper">
-        <div class="api-slidebar">
+        首页
+        <!-- <div class="api-slidebar">
     
             <scroll-bar :style="{height: '100%'}">
     
@@ -126,12 +127,12 @@
                     <api-view></api-view>
                 </div>
             </scroll-bar>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>
     // import scrollBar from '@/components/scrollBar.vue';
-    import apiView from "@/view/Api/components/apiView.vue";
+    // import apiView from "@/view/Api/components/apiView.vue";
     
     export default {
         data() {
@@ -140,7 +141,7 @@
     
         components: {
             // scrollBar,
-            apiView
+            // apiView
         }
     }
 </script>
