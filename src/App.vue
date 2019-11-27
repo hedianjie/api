@@ -252,18 +252,22 @@
         background: #fff;
     }
     .view-header{
-        padding: 7px;
+        padding-bottom: 7px;
+		/* padding-top:0; */
         border-bottom: 1px solid #dcdee2;
         display: flex;
 		justify-content: space-between;
         align-items: center;
         line-height: 28px;
         margin-bottom: 10px;
+		
     }
     .view-header .view-title{
         font-size: 16px;
         font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 		letter-spacing: 1px;
+		font-weight: 400;
+		color: inherit;
     }
 
 	.form-group{

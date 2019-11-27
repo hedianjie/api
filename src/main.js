@@ -70,11 +70,7 @@ router.beforeEach((to, from, next) => {
   //   }
   // }
   if(
-    to.name &&
-    // to.name != 'HomeIndex' && // 不是首页
-    to.name != 'LoginIndex' &&     // 不是登录页
-    to.name != '404Index' &&       // 不是404页
-    to.name != 'AboutIndex'        // 不是关于我们页
+    to.meta.tagNav
   ) {
     store.commit('routerAddRouters', {
       url: to.path,
