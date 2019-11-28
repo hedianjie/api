@@ -132,6 +132,7 @@
 <style scoped>
     .main{
         padding: 10px;
+        overflow: auto;
         /* background: #fff; */
     }
     .search-form-warpper{

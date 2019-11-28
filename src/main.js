@@ -27,6 +27,7 @@ import {
     Dropdown,
     DropdownMenu,
     DropdownItem,
+    Tooltip
 } from 'iview';
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
@@ -45,6 +46,7 @@ Vue.component('Tag', Tag);
 Vue.component('Dropdown', Dropdown);
 Vue.component('DropdownMenu', DropdownMenu);
 Vue.component('DropdownItem', DropdownItem);
+Vue.component('Tooltip', Tooltip);
 
 
 /**

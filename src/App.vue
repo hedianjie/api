@@ -14,13 +14,13 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        line-height: 1.625
     }
     html, body{
         width: 100%;
         height: 100%;
         font-size: 13px;
-        color: #333;
+        line-height: 1.625;
+        color: #515a6e;
         font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
     }
     img{
@@ -43,6 +43,9 @@
     .color-success{
         color:#00cc66 !important;
     }
+	.color-thid-success{
+		color:#8dd84b !important;
+	}
     .color-warning{
         color:#ff9900 !important;
     }
@@ -252,7 +255,7 @@
         background: #fff;
     }
     .view-header{
-        padding-bottom: 7px;
+        padding-bottom: 10px;
 		/* padding-top:0; */
         border-bottom: 1px solid #dcdee2;
         display: flex;

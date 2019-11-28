@@ -2,7 +2,7 @@
     <div class="main-layout">
         <div class="nav-layout">
             <div class="nav-section">
-                <router-link :to="{name: 'ProjectIndex'}" :class="{active: $route.name === 'ProjectIndex'}">产品</router-link>
+                <router-link :to="{name: 'ProjectIndex'}" :class="{active: $route.name === 'ProjectIndex'}">产品管理</router-link>
                 <router-link :to="{name: 'VersionIndex'}" :class="{active: $route.name === 'VersionIndex'}">版本管理</router-link>
             </div>
         </div>
