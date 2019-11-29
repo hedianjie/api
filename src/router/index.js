@@ -87,7 +87,7 @@ export default new Router({
                 // 版本详情介绍页面二级路由
                 {
                     path: '/view/project/versionInfo',
-                    name: 'VersionIndex',
+                    name: 'VersionInfo',
                     component: versionInfo,
                     meta: {
                         requireAuth: true, // 是否需要权限验证

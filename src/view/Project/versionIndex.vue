@@ -25,13 +25,13 @@
                 </div>
                 <div class="group-horizontal">
                     <div class="col-md-3">
-                        <div class="card">
+                        <div class="card" @click="jumpInfo">
                             <div class="card-header">
                                 <h4 class="card-title">
                                     <div class="m-r-5 version">版本：V2.1</div>
                                     <Tag color="blue">开发中</Tag>
                                 </h4>
-                                <div class="card-action">
+                                <div class="card-action" @click.stop>
                                     <Icon type="md-lock m-r-5" size="18"/>
                                     <Dropdown placement="bottom-end">
                                         <Icon type="ios-more" size="18"/>
@@ -589,6 +589,11 @@
                 project_id: '', 
             }
         },
+        methods: {
+            jumpInfo() {
+                this.$router.push({name: 'VersionInfo'})
+            }
+        },
         components: {AvatarGroup}
     }
 </script>
@@ -600,6 +605,9 @@
         padding: 10px;
         background: #fff;
         overflow: auto;
+    }
+    .group{
+        margin-top: -10px;
     }
     /* .view-header{
         margin: 0;
