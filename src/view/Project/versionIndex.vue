@@ -720,18 +720,4 @@
     
     
 </style>
-<style type="text/css">
-    /** 更改标题下的select样式 **/
-    .unborder-select-like-title{
-        width: auto !important;
-    }
-    .unborder-select-like-title .ivu-select-selection{
-        border: none !important;
-        box-shadow: none !important;
-    }
-    .unborder-select-like-title .ivu-select-selected-value,
-    .unborder-select-like-title .ivu-select-placeholder{
-        padding-right: 28px !important;
-        font-size: 16px !important;
-    }
-</style>
+

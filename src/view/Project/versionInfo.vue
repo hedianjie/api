@@ -14,57 +14,63 @@
                 <div class="info-title">
                     <h4><span class="text">接口管理系统</span><Tag color="primary">V2.1.1</Tag></h4>
                     <div class="info-title-action">
-                        <SwitchComponent size="small" v-model="s_witch"/>
+                        <!-- <SwitchComponent size="small" v-model="s_witch"/> -->
+                        <Icon type="md-lock" size="18"/>
                         <span class="m-l-5 f-s-16">私密</span>
                     </div>
                 </div>
                 <div class="form-horizontal">
                     <div class="form-group">
                         <div class="label"><Icon type="ios-cube-outline" size="16" class="m-r-10"></Icon>产品介绍</div>
-                        <div class="form-control">预计开始时间：2015-11-11 至 预计结束时间：2015-11-12</div>
+                        <div class="form-control">	
+使用 ViewUI（iView）时，可以进行全局配置组件的一些属性。 组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。 组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。 组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。</div>
                     </div>
-                    <div class="form-group">
-                        <div class="label"><Icon type="ios-pricetags-outline" size="16" class="m-r-10"></Icon>开发周期</div>
-                        <div class="form-control">预计开始时间：2015-11-11 至 预计结束时间：2015-11-12</div>
-                    </div>
-                    <div class="form-group">
-                        <div class="label"><Icon type="ios-person-outline" size="16" class="m-r-10"></Icon>创建人</div>
+                     <div class="form-group">
+                        <div class="label"><Icon type="ios-person-outline" size="16" class="m-r-10"></Icon>版本创建人</div>
                         <div class="form-control">何殿杰</div>
                     </div>
                     <div class="form-group">
+                        <div class="label"><Icon type="ios-time-outline" size="16" class="m-r-10"></Icon>创建时间</div>
+                        <div class="form-control">2015-11-11</div>
+                    </div>
+                    <div class="form-group">
+                        <div class="label"><Icon type="ios-pricetags-outline" size="16" class="m-r-10"></Icon>开发周期</div>
+                        <div class="form-control">预计：2015-11-11 至 2015-11-12</div>
+                    </div>
+                    <div class="form-group">
                         <div class="label"><Icon type="ios-people-outline" size="16" class="m-r-10"></Icon>参与者</div>
-                        <div class="form-control avatar" style="margin-bottom:-15px">
+                        <div class="form-control avatar">
                             <div class="avatar-group">
-                                <span class="avatar-close">&times;</span>
+                                <!-- <span class="avatar-close">&times;</span> -->
                                 <img src="https://dev-file.iviewui.com/avatar_default/avatar" alt="">
                                 <p>WEB前端 何殿杰</p>
                             </div>
                             <div class="avatar-group">
-                                <span class="avatar-close">&times;</span>
+                                <!-- <span class="avatar-close">&times;</span> -->
                                 <img src="https://dev-file.iviewui.com/avatar_default/avatar" alt="">
                                 <p>WEB前端 何殿杰</p>
                             </div>
                             <div class="avatar-group">
-                                <span class="avatar-close">&times;</span>
+                                <!-- <span class="avatar-close">&times;</span> -->
                                 <img src="https://dev-file.iviewui.com/avatar_default/avatar" alt="">
                                 <p>WEB前端 何殿杰</p>
                             </div>
                             <div class="avatar-group">
-                                <span class="avatar-close">&times;</span>
+                                <!-- <span class="avatar-close">&times;</span> -->
                                 <img src="https://dev-file.iviewui.com/avatar_default/avatar" alt="">
                                 <p>WEB前端 何殿杰</p>
                             </div>
                             <div class="avatar-group">
-                                <span class="avatar-close">&times;</span>
+                                <!-- <span class="avatar-close">&times;</span> -->
                                 <img src="https://dev-file.iviewui.com/avatar_default/avatar" alt="">
                                 <p>WEB前端 何殿杰</p>
                             </div>
-                            <div class="avatar-group add">
+                            <!-- <div class="avatar-group add">
                                 <div class="add-avatar">
                                     <Icon type="md-add" size="22"/>
                                     <span>邀请参与</span>
                                 </div>
-                            </div>
+                            </div> -->
                             <div class="clear-both"></div>
                         </div>
                     </div>
@@ -75,9 +81,32 @@
                                 <table cellspacing="0" cellpadding="0">
                                     <tbody>
                                         <tr>
-                                            <td>1、</td>
-                                            <td><Input type="textarea"/></td>
-                                            <td></td>
+                                            <td width="30">1、</td>
+                                            <td><div class="func-content">使用 ViewUI（iView）时，可以进行全局配置组件的一些属性。
+
+组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。</div></td>
+                                            <td width="70"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30">1、</td>
+                                            <td><div class="func-content">使用 ViewUI（iView）时，可以进行全局配置组件的一些属性。
+
+组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。</div></td>
+                                            <td width="70"></td>
+                                        </tr>
+                                        <tr class="disabled">
+                                            <td width="30">1、</td>
+                                            <td><div class="func-content">使用 ViewUI（iView）时，可以进行全局配置组件的一些属性。
+
+组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。</div></td>
+                                            <td width="70"></td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30">1、</td>
+                                            <td><div class="func-content">使用 ViewUI（iView）时，可以进行全局配置组件的一些属性。
+
+组件会优先使用 prop 设置的属性，如果未设置，再使用全局配置。</div></td>
+                                            <td width="70"></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -88,20 +117,55 @@
             </div>
             <!-- 右侧显示消息通知 -->
             <div class="right-side">
-
+                <div class="btn-groups">
+                    <div class="btn-list">
+                        <div class="btn-info">
+                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <p>编辑当前版本</p>
+                        </div>
+                    </div>
+                    <div class="btn-list">
+                        <div class="btn-info">
+                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <p>编辑当前版本</p>
+                        </div>
+                    </div>
+                    <div class="btn-list">
+                        <div class="btn-info">
+                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <p>编辑当前版本</p>
+                        </div>
+                    </div>
+                    <div class="btn-list">
+                        <div class="btn-info">
+                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <p>编辑当前版本</p>
+                        </div>
+                    </div>
+                    <div class="btn-list">
+                        <div class="btn-info">
+                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <p>编辑当前版本</p>
+                        </div>
+                    </div>
+                    
+                </div>
+                <chat></chat>
             </div>
+            <version-modal></version-modal>
         </div>
     </div>
 </template>
 <script>
-    import AvatarGroup from './components/avatarGroup.vue';
+    import Chat from './components/chat.vue'
+    import VersionModal from './components/versionModal.vue'
     export default {
         data() {
             return {
                 s_witch: true
             }
         },
-        components: {AvatarGroup}
+        components: {Chat, VersionModal}
     }
 </script>
 <style scoped>
@@ -120,7 +184,11 @@
         top: 10px;
         left: 0;
         width: 100%;
-        padding: 0 10px;
+        /* padding: 0 10px; */
+    }
+    .position-header .view-header{
+        padding-left: 10px;
+        padding-right: 10px;
     }
     .left-side,
     .right-side{
@@ -138,7 +206,11 @@
     }
     .right-side{
         width: 33.3333333333%;
+        padding: 0;
+        padding-top: 210px;
+        position: relative;
     }
+    
 
 
     .info-title{
@@ -189,9 +261,9 @@
     .form-group .form-control{
         line-height: 1.625;
     }
-    .form-group .form-control.avatar{
+    /* .form-group .form-control.avatar{
         margin-bottom: -15px;
-    }
+    } */
     /* .form-group .form-control.func{
         border: 1px dashed #dcdee2;
 
@@ -199,8 +271,8 @@
     .form-group .avatar-group{
         position: relative;
         width: 130px;
-        margin-right: 15px;
-        margin-bottom: 15px;
+        margin-right: 10px;
+        margin-bottom: 10px;
         text-align: center;
         float: left;
         height: 71px;
@@ -253,4 +325,68 @@
         flex-direction: column;
     }
 
+    .func-group table{
+        border: none;
+        width: 100%;
+        text-align: left;
+        vertical-align: top;
+
+    }
+    .func-group table td{
+        vertical-align: top;
+        padding: 5px;
+    }
+    .func-group table .func-content{
+        border-bottom: 1px solid #dcdee2;
+        padding-bottom: 5px;
+    }
+    .func-group table tr.disabled{
+        color: #c3cbd6 !important;
+    }
+
+    .right-side .btn-groups{
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 210px;
+    }
+
+    .right-side .btn-groups .btn-list{
+        border-right: 1px solid #dcdee2;
+        border-bottom: 1px solid #dcdee2;
+        width: 25%;
+        float: left;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 70px;
+        transition: color .15s linear;
+        cursor: pointer;
+    }
+    .right-side .btn-groups .btn-list:hover .btn-info{
+        color: #3399ff;
+        
+    }
+    .right-side .btn-groups .btn-list:hover{
+        background: #f7f7f7;
+        box-shadow: 0 0 10px #ddd inset;
+    }
+    .right-side .btn-list .btn-info{
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+    }
+    .right-side .btn-list .btn-info > p{
+        margin-top:5px;
+    }
+    /* .right-side  */
+
+    
+
+    
+    /* .right-side .chat-box .chat-title .actions */
+
 </style>
+

@@ -28,7 +28,8 @@ import {
     DropdownMenu,
     DropdownItem,
     Tooltip,
-    Switch
+    Switch,
+    Badge
 } from 'iview';
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
@@ -49,6 +50,7 @@ Vue.component('DropdownMenu', DropdownMenu);
 Vue.component('DropdownItem', DropdownItem);
 Vue.component('Tooltip', Tooltip);
 Vue.component('SwitchComponent', Switch);
+Vue.component('Badge', Badge);
 
 
 /**

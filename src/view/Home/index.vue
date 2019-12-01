@@ -1,6 +1,6 @@
 <template>
     <div class="api-warpper">
-        首页
+        <chat></chat>
         <!-- <div class="api-slidebar">
     
             <scroll-bar :style="{height: '100%'}">
@@ -133,20 +133,21 @@
 <script>
     // import scrollBar from '@/components/scrollBar.vue';
     // import apiView from "@/view/Api/components/apiView.vue";
-    
+    import Chat from '@/view/Project/components/chat.vue';
     export default {
         data() {
             return {}
         },
     
         components: {
+            Chat
             // scrollBar,
             // apiView
         }
     }
 </script>
 <style scoped>
-    .api-warpper {
+    /* .api-warpper {
         padding-left: 320px;
         position: relative;
     }
@@ -251,7 +252,7 @@
     
     }
     
-    
+     */
     
     .main {
     
