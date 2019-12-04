@@ -6,82 +6,88 @@
         </div>
         <div class="chat-container">
             <div class="chat-user-warpper">
-                <div class="chat-user-list active">
-                    <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                    <div class="chat-user-content">
-                        <div class="chat-user-name">
-                            <!-- <span></span> -->
-                            <span class="tag primary">群组</span>
-                            <Badge :count="1100"></Badge>
+                <ul>
+                    
+                
+                    <li class="chat-user-list active">
+                        <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                        <div class="chat-user-content">
+                            <div class="chat-user-name">
+                                <!-- <span></span> -->
+                                <span class="tag primary">群组</span>
+                                <Badge :count="1100"></Badge>
+                            </div>
+                            <div class="chat-user-status">
+                                <span class="name">群组聊天室</span>
+                            </div>
                         </div>
-                        <div class="chat-user-status">
-                            <span class="name">群组聊天室</span>
+                    </li>
+                    <li class="chat-user-list">
+                        <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                        <div class="chat-user-content">
+                            <div class="chat-user-name">
+                                <span class="tag primary">WEB前端</span>
+                                <Badge :count="1100"></Badge>
+                            </div>
+                            <div class="chat-user-status">
+                                <span class="name">何殿杰</span>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="chat-user-list">
-                    <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                    <div class="chat-user-content">
-                        <div class="chat-user-name">
-                            <span class="tag primary">WEB前端</span>
-                            <Badge :count="1100"></Badge>
+                    </li>
+                    <li class="chat-user-list">
+                        <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                        <div class="chat-user-content">
+                            <div class="chat-user-name">
+                                <span class="tag primary">WEB前端</span>
+                                <Badge :count="1"></Badge>
+                            </div>
+                            <div class="chat-user-status">
+                                <span class="name">何殿杰</span>
+                            </div>
                         </div>
-                        <div class="chat-user-status">
-                            <span class="name">何殿杰</span>
+                    </li>
+                    <li class="chat-user-list">
+                        <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                        <div class="chat-user-content">
+                            <div class="chat-user-name">
+                                <span class="tag primary">WEB前端</span>
+                                <Badge :count="1100"></Badge>
+                            </div>
+                            <div class="chat-user-status">
+                                <div class="name">一个无法成为前端的小渣渣</div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="chat-user-list">
-                    <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                    <div class="chat-user-content">
-                        <div class="chat-user-name">
-                            <span class="tag primary">WEB前端</span>
-                            <Badge :count="1"></Badge>
-                        </div>
-                        <div class="chat-user-status">
-                            <span class="name">何殿杰</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="chat-user-list">
-                    <div class="chat-user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                    <div class="chat-user-content">
-                        <div class="chat-user-name">
-                            <span class="tag primary">WEB前端</span>
-                            <Badge :count="1100"></Badge>
-                        </div>
-                        <div class="chat-user-status">
-                            <div class="name">一个无法成为前端的小渣渣</div>
-                        </div>
-                    </div>
-                </div>
+                    </li>
+                </ul>
             </div>
             <div class="chat-view-warpper">
                 <div class="chat-view-title">群组聊天</div>
                 <div class="chat-view-container">
-                    <!-- 聊天左侧样式 -->
-                    <div class="chat-left-side">
-                        <div class="user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                        <div class="user-content">
-                            <div class="user-title">
-                                <span class="tag primary">WEB前端</span><span>何殿杰</span>
+                    <ul>
+                        <!-- 聊天左侧样式 -->
+                        <li class="chat-left-side">
+                            <div class="user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                            <div class="user-content">
+                                <div class="user-title">
+                                    <span class="tag primary">WEB前端</span><span>何殿杰</span>
+                                </div>
+                                <div class="content">1231231212312312123123121231231212312312</div>
+                                <div class="send-time">2019-11-11 11:11:11</div>
                             </div>
-                            <div class="content">1231231212312312123123121231231212312312</div>
-                            <div class="send-time">2019-11-11 11:11:11</div>
-                        </div>
-                    </div>
-                    <!-- 聊天右侧样式 -->
-                    <div class="chat-right-side">
-                        <div class="user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
-                        <div class="user-content">
-                            <div class="user-title">
-                                <!-- 注意右侧样式 因为float right 名字在前 -->
-                                <span>何殿杰</span><span class="tag primary">WEB前端</span>
+                        </li>
+                        <!-- 聊天右侧样式 -->
+                        <li class="chat-right-side">
+                            <div class="user-avatar"><img src="https://dev-file.iviewui.com/avatar_default/avatar" alt=""></div>
+                            <div class="user-content">
+                                <div class="user-title">
+                                    <!-- 注意右侧样式 因为float right 名字在前 -->
+                                    <span>何殿杰</span><span class="tag primary">WEB前端</span>
+                                </div>
+                                <div class="content">1231231212312312123123121231231212312312</div>
+                                <div class="send-time">2019-11-11 11:11:11</div>
                             </div>
-                            <div class="content">1231231212312312123123121231231212312312</div>
-                            <div class="send-time">2019-11-11 11:11:11</div>
-                        </div>
-                    </div>
+                        </li>
+                    </ul>
                 </div>
                 <div class="chat-view-input-warpper">
                     <!-- 发送图片上传附件 -->
@@ -153,7 +159,17 @@ export default {
         width: 170px;
         height: 100%;
         border-right: 1px solid #dcdee2;
-        overflow: auto;
+        overflow: hidden;
+    }
+    .chat-box .chat-container .chat-user-warpper ul,
+    .chat-box .chat-container .chat-view-warpper .chat-view-container ul{
+        overflow-y: scroll;
+        margin-right: -18px;
+        height: 100%;
+    }
+    .chat-box .chat-container .chat-user-warpper ul li,
+    .chat-box .chat-container .chat-view-warpper .chat-view-container ul li{
+        list-style: none;
     }
     .chat-box .chat-container .chat-user-warpper .chat-user-list{
         padding: 10px 5px;
@@ -279,10 +295,19 @@ export default {
     }
 
     .chat-box .chat-container .chat-view-warpper .chat-view-container{
-        padding: 5px;
+        padding: 5px 0;
+        margin: 0 5px;
         height: 100%;
-        overflow: auto;
+        overflow: hidden;
     }
+    /* .chat-box .chat-container .chat-view-warpper .chat-view-container ul{
+        overflow-y: scroll;
+        margin-right: -18px;
+        height: 100%;
+    }
+    .chat-box .chat-container .chat-view-warpper .chat-view-container ul li{
+        list-style: none;
+    } */
     .chat-box .chat-container .chat-view-warpper .chat-view-container .user-avatar{
         position: absolute;
         width: 32px;

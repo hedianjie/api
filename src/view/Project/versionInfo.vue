@@ -38,6 +38,10 @@
                         <div class="form-control">预计：2015-11-11 至 2015-11-12</div>
                     </div>
                     <div class="form-group">
+                        <div class="label"><Icon type="ios-folder-outline" size="16" class="m-r-10"/>文件</div>
+                        <div class="form-contorl"><UploadList></UploadList></div>
+                    </div>
+                    <div class="form-group">
                         <div class="label"><Icon type="ios-people-outline" size="16" class="m-r-10"></Icon>参与者</div>
                         <div class="form-control avatar">
                             <div class="avatar-group">
@@ -120,32 +124,32 @@
                 <div class="btn-groups">
                     <div class="btn-list">
                         <div class="btn-info">
-                            <div><Icon type="ios-create-outline" size="18"/></div>
+                            <div><Icon type="md-build" size="18"/></div>
                             <p>编辑当前版本</p>
                         </div>
                     </div>
                     <div class="btn-list">
                         <div class="btn-info">
-                            <div><Icon type="ios-create-outline" size="18"/></div>
-                            <p>编辑当前版本</p>
+                            <div><Icon type="md-trash" size="18"/></div>
+                            <p>删除当前版本</p>
                         </div>
                     </div>
                     <div class="btn-list">
                         <div class="btn-info">
-                            <div><Icon type="ios-create-outline" size="18"/></div>
-                            <p>编辑当前版本</p>
+                            <div><Icon type="md-code-working" size="18"/></div>
+                            <p>接口数量：<span class="color-error">69</span></p>
                         </div>
                     </div>
                     <div class="btn-list">
                         <div class="btn-info">
-                            <div><Icon type="ios-create-outline" size="18"/></div>
-                            <p>编辑当前版本</p>
+                            <div><Icon type="md-play" size="18"/></div>
+                            <p>开始当前版本</p>
                         </div>
                     </div>
                     <div class="btn-list">
                         <div class="btn-info">
-                            <div><Icon type="ios-create-outline" size="18"/></div>
-                            <p>编辑当前版本</p>
+                            <div><Icon type="md-checkmark-circle" size="18"/></div>
+                            <p>完成当前版本</p>
                         </div>
                     </div>
                     
@@ -159,13 +163,14 @@
 <script>
     import Chat from './components/chat.vue'
     import VersionModal from './components/versionModal.vue'
+    import UploadList from './components/uploadList.vue'
     export default {
         data() {
             return {
                 s_witch: true
             }
         },
-        components: {Chat, VersionModal}
+        components: {Chat, VersionModal, UploadList}
     }
 </script>
 <style scoped>

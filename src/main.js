@@ -29,7 +29,8 @@ import {
     DropdownItem,
     Tooltip,
     Switch,
-    Badge
+    Badge,
+    DatePicker 
 } from 'iview';
 Vue.component('Icon', Icon);
 Vue.component('Input', Input);
@@ -51,6 +52,7 @@ Vue.component('DropdownItem', DropdownItem);
 Vue.component('Tooltip', Tooltip);
 Vue.component('SwitchComponent', Switch);
 Vue.component('Badge', Badge);
+Vue.component('DatePicker', DatePicker);
 
 
 /**
