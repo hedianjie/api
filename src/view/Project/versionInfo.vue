@@ -135,10 +135,10 @@
                         </div>
                     </div>
                     <div class="btn-list">
-                        <div class="btn-info">
+                        <router-link :to="{name: 'ApiIndex'}" class="btn-info">
                             <div><Icon type="md-code-working" size="18"/></div>
                             <p>接口数量：<span class="color-error">69</span></p>
-                        </div>
+                        </router-link>
                     </div>
                     <div class="btn-list">
                         <div class="btn-info">
@@ -368,6 +368,9 @@
         height: 70px;
         transition: color .15s linear;
         cursor: pointer;
+    }
+    .right-side .btn-groups .btn-list .btn-info{
+        color: inherit;
     }
     .right-side .btn-groups .btn-list:hover .btn-info{
         color: #3399ff;

@@ -1232,8 +1232,8 @@
     }
 </script>
 <style scoped>
-    .view-body{
-        padding: 10px;
+    .view-header{
+        padding-top: 10px;
     }
     .form-group{
         width: 66.66666%;

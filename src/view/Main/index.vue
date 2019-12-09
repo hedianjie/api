@@ -15,6 +15,7 @@
                 <router-link :to="{name: 'HomeIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Home' ? 'active' : ''"><Icon type="md-home" size="18" class="m-r-10"/><span>首页</span></router-link>
                 <router-link :to="{name: 'PeopleIndex'}" class="slidebar-list" :class="$route.meta.partName === 'People' ? 'active' : ''"><Icon type="md-people" size="18" class="m-r-10"/><span>人员管理</span></router-link>
                 <router-link :to="{name: 'ProjectIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Project' ? 'active' : ''"><Icon type="ios-albums" size="18" class="m-r-10"/><span>产品版本管理</span></router-link>
+                <router-link :to="{name: 'InterfaceIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Interface' ? 'active' : ''"><Icon type="ios-build" size="18" class="m-r-10"/><span>API接口管理</span></router-link>
                 <!-- <div 
                     class="slidebar-list" 
                     v-for="(item, index) in project_list" 

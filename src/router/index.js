@@ -6,7 +6,9 @@ import projectMain from '@/view/Project/index.vue'
 import projectIndex from '@/view/Project/projectIndex.vue'
 import versionIndex from '@/view/Project/versionIndex.vue'
 import versionInfo from '@/view/Project/versionInfo.vue'
-// import apiEdit from '@/view/Api/edit.vue'
+import interfaceIndex from '@/view/Interface/interfaceIndex.vue'
+import interfaceEdit from '@/view/Interface/interfaceEdit.vue'
+import persionalInfo from '@/view/Self/persionalInfo.vue'
 
 Vue.use(Router);
 
@@ -31,22 +33,53 @@ export default new Router({
                 }
             ]
         },
-        // {
-        //     path: '/view',
-        //     redirect: '/view/project/apiEdit',
-        //     component: main,
-        //     children: [
-        //         {
-        //             path: '/view/project/apiEdit',
-        //             name: 'ApiEdit',
-        //             component: apiEdit,
-        //             meta: {
-        //                 requireAuth: true, // 是否需要权限验证
-        //                 realName: '接口编辑'
-        //             }
-        //         }
-        //     ]
-        // },
+        {
+            path: '/view',
+            redirect: '/view/self',
+            component: main,
+            children: [
+                {
+                    path: '/view/self/persionalInfo',
+                    name : 'PersionalInfo',
+                    component: persionalInfo,
+                    meta: {
+                        requireAuth: true, // 是否需要权限验证
+                        realName: '个人信息',
+                        tagNav: true, // 是否记录tag-nav
+                        partName: '', // 用于判断当前页面属于哪个菜单的标识
+                    }
+                }
+            ]
+        },
+        {
+            path: '/view/interface',
+            redirect: '/view/interface/interfaceEdit',
+            component: main,
+            children: [
+                {
+                    path: '/view/interface/interfaceIndex',
+                    name: 'InterfaceIndex',
+                    component: interfaceIndex,
+                    meta: {
+                        requireAuth: true, // 是否需要权限验证
+                        realName: '接口列表',
+                        tagNav: true,
+                        partName: 'Interface'
+                    }
+                },
+                {
+                    path: '/view/interface/interfaceEdit',
+                    name: 'InterfaceEdit',
+                    component: interfaceEdit,
+                    meta: {
+                        requireAuth: true, // 是否需要权限验证
+                        realName: '接口编辑',
+                        tagNav: true,
+                        partName: 'Interface'
+                    }
+                },
+            ]
+        },
         {
             path: '/view/project',
             redirect: '/view/project/projectIndex',
@@ -95,7 +128,7 @@ export default new Router({
                         tagNav: false,
                         partName: 'Project'
                     }
-                }
+                },
             ]
         },
         // {
