@@ -243,7 +243,7 @@
 	}
 </style>
 <style>
-    .container{
+    .layout-container{
         height: 100%;
     }
     .view-container{

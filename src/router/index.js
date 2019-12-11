@@ -2,19 +2,32 @@ import Vue from 'vue';
 import Router from 'vue-router'
 import main from '@/view/Main/index.vue'
 import homeIndex from '@/view/Home/index.vue'
+
 import projectMain from '@/view/Project/index.vue'
 import projectIndex from '@/view/Project/projectIndex.vue'
 import versionIndex from '@/view/Project/versionIndex.vue'
 import versionInfo from '@/view/Project/versionInfo.vue'
+
 import interfaceIndex from '@/view/Interface/interfaceIndex.vue'
 import interfaceEdit from '@/view/Interface/interfaceEdit.vue'
+
 import persionalInfo from '@/view/Self/persionalInfo.vue'
+
+import peopleMain from '@/view/People/index.vue'
+import userIndex from '@/view/People/userIndex.vue'
+import departmentIndex from '@/view/People/departmentIndex.vue'
+
+import testIndex from '@/view/Test/testIndex.vue'
+import testEdit from '@/view/Test/testEdit.vue'
 
 Vue.use(Router);
 
 export default new Router({
     mode: 'hash',
     routes: [
+        /**
+         * 首页
+         */
         {
             path: '/view',
             redirect: '/view/homeIndex',
@@ -33,6 +46,9 @@ export default new Router({
                 }
             ]
         },
+        /**
+         * 个人信息
+         */
         {
             path: '/view',
             redirect: '/view/self',
@@ -51,11 +67,102 @@ export default new Router({
                 }
             ]
         },
+        /**
+         * 测试管理
+         */
+        {
+            path: '/view',
+            redirect: '/view/test',
+            component: main,
+            children: [
+                /**
+                 * 测试管理
+                 */
+                {
+                    path: '/view/test/testIndex',
+                    name: 'TestIndex',
+                    component: testIndex,
+                    meta: {
+                        requireAuth: true, // 是否需要权限验证
+                        realName: '测试管理',
+                        tagNav: true, // 是否记录tag-nav
+                        partName: 'Test', // 用于判断当前页面属于哪个菜单的标识
+                    }
+                },
+                /**
+                 * 编辑测试
+                 */
+                {
+                    path: '/view/test/testEdit',
+                    name: 'TestEdit',
+                    component: testEdit,
+                    meta: {
+                        requireAuth: true, // 是否需要权限验证
+                        realName: '测试编辑',
+                        tagNav: false, // 是否记录tag-nav
+                        partName: 'Test', // 用于判断当前页面属于哪个菜单的标识
+                    }
+                }
+            ]
+
+        },
+        /**
+         * 人员管理
+         */
+        {
+            path: '/view/people',
+            redirect: '/view/people/userIndex',
+            component: main,
+            children: [
+                {
+                    path: '/view/people',
+                    name : 'PeopleIndex',
+                    redirect: '/view/people/userIndex',
+                    component: peopleMain,
+                    children: [
+                        /**
+                         * 用户管理
+                         */
+                        {
+                            path: '/view/people/userIndex',
+                            name: 'UserIndex',
+                            component: userIndex,
+                            meta: {
+                                requireAuth: true, // 是否需要权限验证
+                                realName: '用户信息',
+                                tagNav: true,
+                                partName: 'People'
+                            }
+                        },
+                        /**
+                         * 部门管理
+                         */
+                        {
+                            path: '/view/people/departmentIndex',
+                            name: 'DepartmentIndex',
+                            component: departmentIndex,
+                            meta: {
+                                requireAuth: true, // 是否需要权限验证
+                                realName: '用户信息',
+                                tagNav: true,
+                                partName: 'People'
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        /**
+         * 接口管理
+         */
         {
             path: '/view/interface',
             redirect: '/view/interface/interfaceEdit',
             component: main,
             children: [
+                /**
+                 * 接口列表
+                 */
                 {
                     path: '/view/interface/interfaceIndex',
                     name: 'InterfaceIndex',
@@ -67,6 +174,9 @@ export default new Router({
                         partName: 'Interface'
                     }
                 },
+                /**
+                 * 编辑接口
+                 */
                 {
                     path: '/view/interface/interfaceEdit',
                     name: 'InterfaceEdit',
@@ -80,6 +190,9 @@ export default new Router({
                 },
             ]
         },
+        /**
+         * 产品版本管理
+         */
         {
             path: '/view/project',
             redirect: '/view/project/projectIndex',
@@ -91,7 +204,9 @@ export default new Router({
                     redirect: '/view/project/projectIndex',
                     component: projectMain,
                     children: [
-                        // 三级路由 产品列表
+                        /**
+                         * 三级路由 产品列表
+                         */
                         {
                             path: '/view/project/projectIndex',
                             name: 'ProjectIndex',
@@ -103,7 +218,9 @@ export default new Router({
                                 partName: 'Project'
                             }
                         },
-                        // 三级路由 版本管理
+                        /**
+                         * 三级路由 版本管理
+                         */
                         {
                             path: '/view/project/versionIndex',
                             name: 'VersionIndex',
@@ -117,7 +234,9 @@ export default new Router({
                         }
                     ]
                 },
-                // 版本详情介绍页面二级路由
+                /**
+                 * 版本详情介绍页面二级路由
+                 */
                 {
                     path: '/view/project/versionInfo',
                     name: 'VersionInfo',

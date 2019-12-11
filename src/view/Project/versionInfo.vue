@@ -176,6 +176,7 @@
 <style scoped>
     .main-warpper{
         padding: 10px;
+        height: 100%;
     }
     .main{
         position: relative;

@@ -16,6 +16,7 @@
                 <router-link :to="{name: 'PeopleIndex'}" class="slidebar-list" :class="$route.meta.partName === 'People' ? 'active' : ''"><Icon type="md-people" size="18" class="m-r-10"/><span>人员管理</span></router-link>
                 <router-link :to="{name: 'ProjectIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Project' ? 'active' : ''"><Icon type="ios-albums" size="18" class="m-r-10"/><span>产品版本管理</span></router-link>
                 <router-link :to="{name: 'InterfaceIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Interface' ? 'active' : ''"><Icon type="ios-build" size="18" class="m-r-10"/><span>API接口管理</span></router-link>
+                <router-link :to="{name: 'TestIndex'}" class="slidebar-list" :class="$route.meta.partName === 'Test' ? 'active' : ''"><Icon type="ios-alert" size="18" class="m-r-10"/><span>测试管理</span></router-link>
                 <!-- <div 
                     class="slidebar-list" 
                     v-for="(item, index) in project_list" 
@@ -34,7 +35,7 @@
         <div class="layout-main">
             <div class="layout-main-container">
                 <div class="tag-nav-warpper"><tag-nav></tag-nav></div>
-                <router-view class="container"></router-view>
+                <router-view class="layout-container"></router-view>
             </div>
             
         </div>
@@ -244,7 +245,7 @@
     z-index: 1;
     background: #39435c;
 }
-.container{
+.layout-container{
     overflow: auto;
 }
 
